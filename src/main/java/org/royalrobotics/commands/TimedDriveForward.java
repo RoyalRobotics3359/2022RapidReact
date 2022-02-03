@@ -38,6 +38,7 @@ public class TimedDriveForward extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     timer = null;
+    drive.stop();
   }
 
   // Returns true when the command should end.
