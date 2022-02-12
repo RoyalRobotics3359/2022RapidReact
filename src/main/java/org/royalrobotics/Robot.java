@@ -8,10 +8,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import org.royalrobotics.Constants;
+import org.royalrobotics.Constants.JoystickButtons;
 import org.royalrobotics.subsystems.Drive;
+import org.royalrobotics.subsystems.Shooter;
 import org.royalrobotics.commands.JoystickDrive;
+import org.royalrobotics.commands.ScoreHighGoal;
 import org.royalrobotics.commands.TimedDriveForward;
+import org.royalrobotics.commands.Shoot;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,11 +26,12 @@ import org.royalrobotics.commands.TimedDriveForward;
  * directory.
  */
 public class Robot extends TimedRobot {
-  private final Joystick m_stick = new Joystick(0);
-  private final Timer m_timer = new Timer();
+  private Joystick stick;
+  private Timer m_timer = new Timer();
 
   private Drive drive;
   private OperatorConsole console;
+  private Shooter shooter;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,7 +40,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drive = new Drive();
+    shooter = new Shooter();
     console = new OperatorConsole();
+    stick = new Joystick(0);
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -60,6 +69,12 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     CommandScheduler.getInstance().run();
+            
+    //JoystickButton shoot = new JoystickButton(console.getLeft(), Constants.JoystickButtons.shoot.button);
+    //shoot.whenPressed(new Shoot(shooter));
+    
+
+
   }
 
   /** This function is called once each time the robot enters test mode. */

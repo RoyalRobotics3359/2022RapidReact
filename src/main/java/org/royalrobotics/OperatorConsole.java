@@ -4,24 +4,29 @@
 
 package org.royalrobotics;
 
+import org.royalrobotics.commands.Shoot;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /** Add your docs here. */
 public class OperatorConsole {
 
-    Joystick left;
-    Joystick right;
+    XboxController controller;
 
     public OperatorConsole() {
-        left = new Joystick(Constants.Joystick.left.channel);
-        right = new Joystick(Constants.Joystick.right.channel);
+        controller = new XboxController(Constants.CONTROLLER_ID);
+
+
     }
 
-    public Joystick getLeft() {
-        return left;
+    public double getLeft() {
+        return controller.getRawAxis(1); // FIX
     }
 
     public Joystick getRight() {
-        return right;
+        return right;// FIX
     }
+
 }
