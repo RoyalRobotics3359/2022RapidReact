@@ -20,7 +20,7 @@ import org.royalrobotics.commands.JoystickDrive;
 import org.royalrobotics.commands.RetractClimber;
 import org.royalrobotics.commands.ScoreHighGoal;
 import org.royalrobotics.commands.TimedDriveForward;
-import org.royalrobotics.commands.Shoot;
+import org.royalrobotics.commands.BringShooterUpToSpeed;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -54,6 +54,8 @@ public class Robot extends TimedRobot {
     console.getShootButton().whenPressed(new ScoreHighGoal(shooter));
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
     console.getRetractClimber().whenPressed(new RetractClimber(climber));
+
+    CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -73,7 +75,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters teleoperated mode. */
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
   }
 
   /** This function is called periodically during teleoperated mode. */

@@ -22,8 +22,8 @@ public class Shooter extends SubsystemBase {
         shooterMotor = new CANSparkMax(CanId.shooter.id, MotorType.kBrushless);
         shooterMotor.setInverted(CanId.shooter.reversed);
 
-        hopperMotor = new CANSparkMax(CanId.hopper.id, MotorType.kBrushless);
-        hopperMotor.setInverted(CanId.hopper.reversed);
+        // hopperMotor = new CANSparkMax(CanId.hopper.id, MotorType.kBrushless);
+        // hopperMotor.setInverted(CanId.hopper.reversed);
     }
 
     public double getRPM() {
@@ -39,10 +39,10 @@ public class Shooter extends SubsystemBase {
     }
 
     public void turnOnHopper() {
-        hopperMotor.set(Constants.Speeds.hopper.speed);
+        // hopperMotor.set(Constants.Speeds.hopper.speed);
     }
 
     public void turnOffHopper() {
-        hopperMotor.set(0.0);
+        // hopperMotor.set(0.0);
     }
 }

@@ -13,12 +13,12 @@ import org.royalrobotics.subsystems.Shooter;
 
 // This command turns on the shooter's pitching machine and waits until
 // the motor's RPM reaches the setpoint.  It does not turn off the shooter.
-public class Shoot extends CommandBase {
+public class BringShooterUpToSpeed extends CommandBase {
 
   private Shooter shooter;
 
   /** Creates a new Shoot. */
-  public Shoot(Shooter shooterSubsystem) {
+  public BringShooterUpToSpeed(Shooter shooterSubsystem) {
     shooter = shooterSubsystem;
     addRequirements(shooter);
   }

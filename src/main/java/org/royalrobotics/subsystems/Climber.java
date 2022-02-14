@@ -19,6 +19,7 @@ public class Climber extends SubsystemBase {
 
   public Climber() {
     climbSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendClimber.channel, Pnuematics.retractClimber.channel);
+    retractClimber();
   }
 
   public void extendClimber() {

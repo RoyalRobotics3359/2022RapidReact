@@ -14,15 +14,25 @@ import org.royalrobotics.subsystems.Shooter;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScoreHighGoal extends SequentialCommandGroup {
 
+  private boolean finished;
+
   /** Creates a new ScoreHighGoal. */
   public ScoreHighGoal(Shooter shooterSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Shoot(shooterSubsystem), new MoveCargoIntoShooter(shooterSubsystem));
+    addCommands(new BringShooterUpToSpeed(shooterSubsystem), new MoveCargoIntoShooter(shooterSubsystem));
+    finished = false;
   }
 
   @Override
   public void end(boolean interrupated) {
-    // ...
+    if (interrupated) {
+      finished = true;
+    }
+  }
+
+  @Override
+  public boolean isFinished() {
+    return finished;
   }
 }
