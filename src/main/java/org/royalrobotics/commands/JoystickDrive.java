@@ -33,8 +33,8 @@ public class JoystickDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftPercent = console.getLeft().getY() * Constants.Speeds.driving.speed;
-    double rightPercent = console.getRight().getY() * Constants.Speeds.driving.speed;
+    double leftPercent = console.getLeftY() * Constants.Speeds.driving.speed;
+    double rightPercent = console.getRightY() * Constants.Speeds.driving.speed;
     drive.setSpeed(leftPercent, rightPercent);
   }
 

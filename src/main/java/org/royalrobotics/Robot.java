@@ -4,17 +4,20 @@
 
 package org.royalrobotics;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import org.royalrobotics.Constants;
-import org.royalrobotics.Constants.JoystickButtons;
+//import org.royalrobotics.Constants;
+import org.royalrobotics.subsystems.Climber;
 import org.royalrobotics.subsystems.Drive;
 import org.royalrobotics.subsystems.Shooter;
+import org.royalrobotics.commands.ExtendClimber;
 import org.royalrobotics.commands.JoystickDrive;
+import org.royalrobotics.commands.RetractClimber;
 import org.royalrobotics.commands.ScoreHighGoal;
 import org.royalrobotics.commands.TimedDriveForward;
 import org.royalrobotics.commands.Shoot;
@@ -26,12 +29,14 @@ import org.royalrobotics.commands.Shoot;
  * directory.
  */
 public class Robot extends TimedRobot {
-  private Joystick stick;
+  
   private Timer m_timer = new Timer();
 
   private Drive drive;
   private OperatorConsole console;
   private Shooter shooter;
+  private Climber climber;
+  private Compressor compressor;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -41,8 +46,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drive = new Drive();
     shooter = new Shooter();
+    climber = new Climber();
+    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+    compressor.enableDigital();
     console = new OperatorConsole();
-    stick = new Joystick(0);
+
+    console.getShootButton().whenPressed(new ScoreHighGoal(shooter));
+    console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
+    console.getRetractClimber().whenPressed(new RetractClimber(climber));
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -69,12 +80,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     CommandScheduler.getInstance().run();
-            
-    //JoystickButton shoot = new JoystickButton(console.getLeft(), Constants.JoystickButtons.shoot.button);
-    //shoot.whenPressed(new Shoot(shooter));
-    
-
-
   }
 
   /** This function is called once each time the robot enters test mode. */
