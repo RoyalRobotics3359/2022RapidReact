@@ -13,12 +13,15 @@ public class OperatorConsole {
     private XboxController controller;
     private JoystickButton shootButton;
     private JoystickButton extendClimber, retractClimber;
+    private JoystickButton intakeIn, intakeOut;
 
     public OperatorConsole() {
         controller = new XboxController(Constants.CONTROLLER_ID);
         shootButton = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         extendClimber = new JoystickButton(controller, XboxController.Button.kX.value);
         retractClimber = new JoystickButton(controller, XboxController.Button.kY.value);
+        intakeIn = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
+        intakeOut = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
     }
 
     public JoystickButton getExtendClimberButton() {
@@ -33,9 +36,17 @@ public class OperatorConsole {
         return shootButton;
     }
 
+    public JoystickButton getIntakeInButton(){
+        return intakeIn;
+    }
+
+    public JoystickButton getIntakeOutButton(){
+        return intakeOut;
+    }
+
 
     public double getLeftY() {
-        return controller.getRawAxis(1); 
+        return controller.getRawAxis(1) * -1.0; 
     }
 
     public double getLeftX() {
@@ -43,7 +54,7 @@ public class OperatorConsole {
     }
 
     public double getRightY() {
-        return controller.getRawAxis(5); 
+        return controller.getRawAxis(5) * -1.0; 
     }
 
     public double getRightX() {

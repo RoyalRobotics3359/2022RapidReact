@@ -8,6 +8,7 @@ import org.royalrobotics.Constants;
 import org.royalrobotics.OperatorConsole;
 import org.royalrobotics.subsystems.Drive;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class JoystickDrive extends CommandBase {
@@ -35,12 +36,15 @@ public class JoystickDrive extends CommandBase {
   public void execute() {
     double leftPercent = console.getLeftY() * Constants.Speeds.driving.speed;
     double rightPercent = console.getRightY() * Constants.Speeds.driving.speed;
+    SmartDashboard.putNumber("LEFT P", leftPercent);
+    SmartDashboard.putNumber("RIGHT P", rightPercent);
     drive.setSpeed(leftPercent, rightPercent);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("JoystickDrive.end("+interrupted+")");
   }
 
   // Returns true when the command should end.

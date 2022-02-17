@@ -8,12 +8,14 @@ public class Constants {
     //  Enumeration of all the CAN devices on the CAN bus
     //
     public enum CanId {
-        frontLeft(1, false),
-        frontRight(2, true),
+        frontLeft(4, false),
+        frontRight(1, true),
         rearLeft(3, false),
-        rearRight(4, true),
-        shooter(5, false),
-        hopper(6, false);
+        rearRight(2, true),
+        shooter(7, false),
+        hopper(6, false),
+        intakeArm(5, false),
+        hopperMotor(8, false);
 
         public final int id;
         public final boolean reversed;
@@ -26,8 +28,11 @@ public class Constants {
 
     public enum Speeds {
         shoot(.95),
-        hopper(.40),
-        driving(0.70);
+        hopperIn(.40),
+        hopperOut(-.40),
+        driving(0.70),
+        intakeIn(0.70),
+        intakeOut(-0.70);
 
         public final double speed;
 
@@ -50,6 +55,7 @@ public class Constants {
 
     }
 
+
     public static final double DRIVE_MOTOR_RAMP_TIME = 1.5;
     public static final double CLIMBER_EXTEND_TIME = 0.5;
     public static final double CLIMBER_RETRACT_TIME = 3.0;
@@ -61,6 +67,17 @@ public class Constants {
     public static final int RIGHT_JOYSTICK_ID = 5;
 
     public static final int CONTROLLER_ID = 0;
+
+    public static final double JOYSTICK_DEADBAND = 0.05;
+
+    ///////////////////////////[[[[[[[[[[[[[LOGIC]]]]]]]]]]]]]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+    public static final boolean HOPPER_EXSISTS = false;
+    public static final boolean SHOOTER_EXSISTS = false;
+    public static final boolean INTAKE_EXSISTS = false;
+
+
+
 
 
 
