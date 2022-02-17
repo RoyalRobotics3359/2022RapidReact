@@ -19,30 +19,45 @@ public class Shooter extends SubsystemBase {
 
     public Shooter() {
         super();
-        shooterMotor = new CANSparkMax(CanId.shooter.id, MotorType.kBrushless);
-        shooterMotor.setInverted(CanId.shooter.reversed);
+        if (Constants.SHOOTER_EXSISTS){
+            shooterMotor = new CANSparkMax(CanId.shooter.id, MotorType.kBrushless);
+            shooterMotor.setInverted(CanId.shooter.reversed);
 
-        // hopperMotor = new CANSparkMax(CanId.hopper.id, MotorType.kBrushless);
-        // hopperMotor.setInverted(CanId.hopper.reversed);
+            hopperMotor = new CANSparkMax(CanId.hopper.id, MotorType.kBrushless);
+            hopperMotor.setInverted(CanId.hopper.reversed);
+        }
     }
 
     public double getRPM() {
-        return shooterMotor.getEncoder().getVelocity();
+        if (Constants.SHOOTER_EXSISTS){
+            return shooterMotor.getEncoder().getVelocity();
+        }
+        else{
+            return 0.0;
+        }
     }
 
     public void turnOnPichingMachine() {
-        shooterMotor.set(Constants.Speeds.shoot.speed);
+        if (Constants.SHOOTER_EXSISTS){
+            shooterMotor.set(Constants.Speeds.shoot.speed);
+        }
     }
 
     public void turnOffPitchingMacine() {
-        shooterMotor.set(0.0);
+        if (Constants.SHOOTER_EXSISTS){
+            shooterMotor.set(0.0);
+        }
     }
 
     public void turnOnHopper() {
-        // hopperMotor.set(Constants.Speeds.hopper.speed);
+        if (Constants.SHOOTER_EXSISTS){
+            hopperMotor.set(Constants.Speeds.hopperIn.speed);
+        }
     }
 
     public void turnOffHopper() {
-        // hopperMotor.set(0.0);
+        if (Constants.SHOOTER_EXSISTS){
+            hopperMotor.set(0.0);
+        }
     }
 }
