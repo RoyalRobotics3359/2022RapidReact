@@ -9,21 +9,15 @@ import org.royalrobotics.subsystems.Drive;
 import org.royalrobotics.subsystems.Drive.*;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import org.royalrobotics.subsystems.Drive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class Drive10Feet extends CommandBase {
 
   private Drive drive;
-  //private OperatorConsole operatorConsole;
-
-  
-
-  
 
   public Drive10Feet() {
-    // Creates an AnalogGyro object on port 0
-    // AnalogGyro gyro = new AnalogGyro(0);
-
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -31,15 +25,9 @@ public class Drive10Feet extends CommandBase {
   public void initialize() {
 
   }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Setting the encoder
-    // if(drive.encoder.getDistance() < 10) {
-    //   drive.westCoastDrive();
-    // }
-    
   }
 
   // Called once the command ends or is interrupted.

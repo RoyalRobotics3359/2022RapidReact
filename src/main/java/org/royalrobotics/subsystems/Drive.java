@@ -19,11 +19,9 @@ public class Drive extends SubsystemBase {
     private CANSparkMax leftMaster, leftFollower, rightMaster, rightFollower;
 
     private RelativeEncoder LeftMasterEncoder;
-
     public Encoder encoder;
 
     private OperatorConsole oc;
-
 
     public static final double wheelDiameter = 6;
     public static final double pulsePerRevolution = 360;
@@ -52,6 +50,13 @@ public class Drive extends SubsystemBase {
         // leftFollower.follow(CANSparkMax.ExternalFollower.kFollowerSparkMax, CanId.frontLeft.id);
         // rightFollower.follow(CANSparkMax.ExternalFollower.kFollowerSparkMax, CanId.frontRight.id);
 
+
+        
+
+        rightMaster.restoreFactoryDefaults();
+        rightFollower.restoreFactoryDefaults();
+        leftMaster.restoreFactoryDefaults();
+        leftFollower.restoreFactoryDefaults();
 
         
 
