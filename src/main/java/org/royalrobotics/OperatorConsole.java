@@ -14,6 +14,7 @@ public class OperatorConsole {
     private JoystickButton shootButton;
     private JoystickButton extendClimber, retractClimber;
     private JoystickButton intakeIn, intakeOut;
+    private JoystickButton turretAim;
 
     public OperatorConsole() {
         controller = new XboxController(Constants.CONTROLLER_ID);
@@ -22,6 +23,7 @@ public class OperatorConsole {
         retractClimber = new JoystickButton(controller, XboxController.Button.kY.value);
         intakeIn = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         intakeOut = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        turretAim = new JoystickButton(controller, XboxController.Button.kA.value);
     }
 
     public JoystickButton getExtendClimberButton() {
@@ -42,6 +44,10 @@ public class OperatorConsole {
 
     public JoystickButton getIntakeOutButton(){
         return intakeOut;
+    }
+
+    public JoystickButton getTurretAimButton(){
+        return turretAim;
     }
 
 

@@ -31,6 +31,7 @@ public class Drive extends SubsystemBase {
 
     public Drive() {
         super();
+        if (Constants.DRIVE_EXISTS) {
         encoder = new Encoder(0, 1);
         leftMaster = new CANSparkMax(CanId.frontLeft.id, MotorType.kBrushless);
         leftFollower = new CANSparkMax(CanId.rearLeft.id, MotorType.kBrushless);
@@ -40,6 +41,8 @@ public class Drive extends SubsystemBase {
         // Grouping encoders together
         MotorControllerGroup leftEncoderGroup = new MotorControllerGroup(leftMaster, leftFollower);
         MotorControllerGroup rightEncoderGroup = new MotorControllerGroup(rightMaster, rightFollower);
+
+        
 
         //
         // DifferentialDrive diffDrive = new DifferentialDrive(leftEncoderGroup, rightEncoderGroup);
@@ -83,9 +86,11 @@ public class Drive extends SubsystemBase {
         //rightMaster.setOpenLoopRampRate(Constants.DRIVE_MOTOR_RAMP_TIME);
         //leftFollower.setOpenLoopRampRate(Constants.DRIVE_MOTOR_RAMP_TIME);
         //rightFollower.setOpenLoopRampRate(Constants.DRIVE_MOTOR_RAMP_TIME);
+        }
     } 
 
     public void setSpeed(double leftPercentPower, double rightPercentPower) {
+        if (Constants.DRIVE_EXISTS) {
         if (leftPercentPower >= -Constants.JOYSTICK_DEADBAND && leftPercentPower <= Constants.JOYSTICK_DEADBAND){
             leftMaster.set(0.0);
         }else {
@@ -99,9 +104,13 @@ public class Drive extends SubsystemBase {
         }
         SmartDashboard.putNumber("Left Current", leftMaster.getOutputCurrent());
         SmartDashboard.putNumber("Right Current", rightMaster.getOutputCurrent());
+
+        SmartDashboard.putNumber("Left rpm", leftMaster.getEncoder().getVelocity());
+        SmartDashboard.putNumber("Right rpm", rightMaster.getEncoder().getVelocity());
+        }
     }
 
-    public void drive10Feet(){
+    /*public void drive10Feet(){
         LeftMasterEncoder = leftMaster.getEncoder();
 
         LeftMasterEncoder.getPosition();
@@ -110,10 +119,12 @@ public class Drive extends SubsystemBase {
 
 
 
-    }
+    }*/
 
     public void stop() {
+        if (Constants.DRIVE_EXISTS) {
         leftMaster.set(0.0);
         rightMaster.set(0.0);
+        }
     }
 }

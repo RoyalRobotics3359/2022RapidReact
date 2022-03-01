@@ -8,14 +8,15 @@ public class Constants {
     //  Enumeration of all the CAN devices on the CAN bus
     //
     public enum CanId {
-        frontLeft(4, false),
-        frontRight(1, true),
-        rearLeft(3, false),
-        rearRight(2, true),
-        shooter(7, false),
+        frontLeft(3, false),
+        frontRight(2, true),
+        rearLeft(4, false),
+        rearRight(1, true),
+        shooter(5, false),
         hopper(6, false),
-        intakeArm(5, false),
-        hopperMotor(8, false);
+        intakeArm(7, false),
+        hopperMotor(8, false),
+        turretMotor(9, false);
 
         public final int id;
         public final boolean reversed;
@@ -74,7 +75,11 @@ public class Constants {
 
     public static final boolean HOPPER_EXSISTS = false;
     public static final boolean SHOOTER_EXSISTS = false;
-    public static final boolean INTAKE_EXSISTS = false;
+    public static final boolean INTAKE_EXSISTS = true;
+    public static final boolean CARGOPICKUP_EXISTS = false;
+    public static final boolean CLIMBER_EXISTS = false;
+    public static final boolean DRIVE_EXISTS = true;
+    public static final boolean TURRET_EXISTS = false;
 
 
 

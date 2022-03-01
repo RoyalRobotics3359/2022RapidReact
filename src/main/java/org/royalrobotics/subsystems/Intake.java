@@ -19,14 +19,16 @@ public class Intake extends SubsystemBase {
   public Intake() {
     super();
     if (Constants.INTAKE_EXSISTS){
-      intakeArmMotor = new CANSparkMax(CanId.intakeArm.id, MotorType.kBrushless);
+      intakeArmMotor = new CANSparkMax(CanId.intakeArm.id, MotorType.kBrushed);
       intakeArmMotor.setInverted(CanId.intakeArm.reversed);
+
     }
   }
 
   public void intakeMotorIn(){
     if (Constants.INTAKE_EXSISTS){
       intakeArmMotor.set(Constants.Speeds.intakeIn.speed);
+      System.out.println("intake in");
     }
   }
 

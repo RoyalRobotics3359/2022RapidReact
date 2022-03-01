@@ -18,16 +18,22 @@ public class Climber extends SubsystemBase {
   public DoubleSolenoid climbSolenoid; 
 
   public Climber() {
+    if (Constants.CLIMBER_EXISTS) {
     climbSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendClimber.channel, Pnuematics.retractClimber.channel);
     retractClimber();
+    }
   }
 
   public void extendClimber() {
+    if (Constants.CLIMBER_EXISTS) {
     climbSolenoid.set(Value.kForward);
+    }
   }
 
   public void retractClimber() {
+    if (Constants.CLIMBER_EXISTS) {
     climbSolenoid.set(Value.kReverse);
+    }
   }
 
 

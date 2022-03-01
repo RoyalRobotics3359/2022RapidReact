@@ -29,6 +29,7 @@ import org.royalrobotics.commands.TimedDriveForward;
 
 import java.beans.Encoder;
 
+import org.royalrobotics.commands.AimShooter;
 import org.royalrobotics.commands.BringShooterUpToSpeed;
 
 /**
@@ -69,12 +70,15 @@ public class Robot extends TimedRobot {
     console = new OperatorConsole();
     gyroEncoder = new AnalogGyro(0);
 
-    //console.getShootButton().whenPressed(new ScoreHighGoal(shooter));
-    //console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
-    //console.getRetractClimber().whenPressed(new RetractClimber(climber));
+    console.getShootButton().whenPressed(new ScoreHighGoal(shooter));
+    console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
+    console.getRetractClimber().whenPressed(new RetractClimber(climber));
 
-    //console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));
-    //console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
+    console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));
+    console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
+
+    console.getTurretAimButton().whileHeld(new AimShooter(turret));
+
 
     CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
 
@@ -107,7 +111,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     // FIXME:  This is for debugging only
-    turret.aim();
+    
+    //turret.aim();
   }
 
   /** This function is called once each time the robot enters test mode. */

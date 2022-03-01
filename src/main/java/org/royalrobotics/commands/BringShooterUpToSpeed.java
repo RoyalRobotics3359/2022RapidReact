@@ -26,21 +26,21 @@ public class BringShooterUpToSpeed extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("Shoot::initialize()");
+    //System.out.println("Shoot::initialize()");
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Shoot::execute()");
+    //System.out.println("Shoot::execute()");
     shooter.turnOnPichingMachine();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Shoot::end(" + interrupted + ")");
+    //System.out.println("Shoot::end(" + interrupted + ")");
   }
 
   public boolean isReadyToShoot() {

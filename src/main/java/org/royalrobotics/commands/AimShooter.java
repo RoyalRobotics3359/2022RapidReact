@@ -6,11 +6,15 @@ package org.royalrobotics.commands;
 
 import org.royalrobotics.subsystems.Turret;
 
+import org.royalrobotics.OperatorConsole;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AimShooter extends CommandBase {
 
   private Turret turret;
+  private OperatorConsole console;
+  private double moveTurret;
   
   /** Creates a new AimShooter. */
   public AimShooter(Turret turretSubsystem) {
@@ -20,15 +24,21 @@ public class AimShooter extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    turret.aim();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    turret.setTurretStop();
+  }
 
   // Returns true when the command should end.
   @Override

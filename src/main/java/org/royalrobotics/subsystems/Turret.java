@@ -4,6 +4,13 @@
 
 package org.royalrobotics.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import org.royalrobotics.Constants;
+import org.royalrobotics.Constants.CanId;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -24,19 +31,65 @@ public class Turret extends SubsystemBase {
   private NetworkTableEntry targetArea;
   private NetworkTableEntry targetSkew;
 
+  private CANSparkMax turretMotor;
+
+  private Double angleOfTurret;
+  private Integer turretGearRatio, ticksPerRotation;
+
+  private PIDController turretController;
+
+  public static final double Kp = 0.2;
+  public static final double Ki = 0.005;
+  public static final double Kd = 0.001;
+
+
   public Turret() {
+    if (Constants.TURRET_EXISTS){
+      table = NetworkTableInstance.getDefault().getTable("limelight");
+      turretMotor = new CANSparkMax(CanId.turretMotor.id, MotorType.kBrushless);
+      turretGearRatio = 1;
+      ticksPerRotation = 42;
+      turretController = new PIDController(Kp, Ki, Kd);
+
+    }
   }
 
   public boolean aim() {
-    table = NetworkTableInstance.getDefault().getTable("limelight");
-    targetOffsetAngle_Horizontal = table.getEntry("tx");
-    targetOffsetAngle_Vertical = table.getEntry("ty");
-    targetArea = table.getEntry("ta");
-    targetSkew = table.getEntry("ts");
+    if (Constants.TURRET_EXISTS) {
+      targetOffsetAngle_Horizontal = table.getEntry("tx");
+      targetOffsetAngle_Vertical = table.getEntry("ty");
+      targetArea = table.getEntry("ta");
+      targetSkew = table.getEntry("ts");
 
-    SmartDashboard.putNumber("Target Angle (Horizontal)", targetOffsetAngle_Horizontal.getNumber(0.0).doubleValue());
-    SmartDashboard.putNumber("Target Angle (Vertical)", targetOffsetAngle_Vertical.getNumber(0.0).doubleValue());
+      double tx =  table.getEntry("tx").getDouble(0.0);
+
+      //SmartDashboard.putNumber("Target Angle (Horizontal)", targetOffsetAngle_Horizontal.getDouble(0.0));
+      SmartDashboard.putNumber("Target Angle (Horizontal)", tx);
+
+      SmartDashboard.putNumber("Target Angle (Vertical)", targetOffsetAngle_Vertical.getDouble(0.0));
+
+      angleOfTurret = (turretMotor.getEncoder().getPosition()) * (turretGearRatio) * (360/ticksPerRotation);
+
+
+      double turretAdjust = turretController.calculate(tx, 0.0);
+
+      SmartDashboard.putNumber("Turret Adjust", turretAdjust);
+      
+      turretMotor.set(turretAdjust);
+      
+
+    }
     return false;
+  }
+
+  public void setTurretSpeed(double speed){
+    turretMotor.set(speed);
+
+  }
+
+  public void setTurretStop() {
+    turretMotor.set(0.0);
+
   }
 
 
