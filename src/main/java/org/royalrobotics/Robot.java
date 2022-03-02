@@ -71,7 +71,9 @@ public class Robot extends TimedRobot {
 
     console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
-    console.getRetractClimber().whenPressed(new RetractClimber(climber));
+    // To avoid damaging the robot we only want to retract the climber while the button is held down
+    // Releaseing the button interrupts the command which stops the winch motor
+    console.getRetractClimber().whenHeld(new RetractClimber(climber));
 
 
     console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));

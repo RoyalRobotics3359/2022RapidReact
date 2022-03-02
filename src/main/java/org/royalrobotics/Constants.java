@@ -8,12 +8,14 @@ public class Constants {
     //  Enumeration of all the CAN devices on the CAN bus
     //
     public enum CanId {
+        // motor controllers on 40 amp breaker
         frontLeft(3, false),
         frontRight(2, true),
         rearLeft(6, false),//changed from 4
         rearRight(1, true),
+        climber(4, true),
         shooter(5, false),
-        hopper(4, false),//changed from 6
+        // motor controllers on 20 amp breaker
         intakeArm(7, false),
         hopperMotor(8, false),
         turretMotor(9, false);
@@ -33,7 +35,8 @@ public class Constants {
         hopperOut(-.40),
         driving(0.70),
         intakeIn(0.70),
-        intakeOut(-0.70);
+        intakeOut(-0.70),
+        climber(0.50);      // FIXME: Set actual value
 
         public final double speed;
 
