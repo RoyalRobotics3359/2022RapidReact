@@ -10,10 +10,10 @@ public class Constants {
     public enum CanId {
         frontLeft(3, false),
         frontRight(2, true),
-        rearLeft(4, false),
+        rearLeft(6, false),//changed from 4
         rearRight(1, true),
         shooter(5, false),
-        hopper(6, false),
+        hopper(4, false),//changed from 6
         intakeArm(7, false),
         hopperMotor(8, false),
         turretMotor(9, false);
@@ -46,7 +46,10 @@ public class Constants {
         extendClimber(0),
         retractClimber(1),
         extendIntake(2),
-        retractIntake(3);
+        retractIntake(3),
+        extendHopperStopper(4),
+        retractHopperStopper(5);
+
 
         public final int channel;
 
@@ -75,7 +78,7 @@ public class Constants {
 
     public static final boolean HOPPER_EXSISTS = false;
     public static final boolean SHOOTER_EXSISTS = false;
-    public static final boolean INTAKE_EXSISTS = true;
+    public static final boolean INTAKE_EXSISTS = false;
     public static final boolean CARGOPICKUP_EXISTS = false;
     public static final boolean CLIMBER_EXISTS = false;
     public static final boolean DRIVE_EXISTS = true;

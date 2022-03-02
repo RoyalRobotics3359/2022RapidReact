@@ -9,6 +9,10 @@ import org.royalrobotics.subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/***
+ * Lowers the intake arm solenoid and turns the intake motors inwards to intake a ball.
+ * This class needs to make sure the intake arm is already down.
+ */
 public class IntakeIn extends CommandBase {
 
   private Intake intake;
@@ -29,15 +33,16 @@ public class IntakeIn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    intake.intakeSolenoidOut();
     intake.intakeMotorIn();
-    //hopper.hopperIn();
+    hopper.hopperUp();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intake.intakeStop();
-    //hopper.hopperStop();
+    hopper.hopperStop();
   }
 
   // Returns true when the command should end.

@@ -4,45 +4,39 @@
 
 package org.royalrobotics.commands;
 
-import org.royalrobotics.subsystems.Hopper;
 import org.royalrobotics.subsystems.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 /***
- * Rotates Intake motor reverse. This class ONLY is used to spit a ball out of our intake.
- * This class needs to make sure the intake arm is already extended.
+ * This class moves the intake arm solenoid upwards in its resting position and stops moving the intake motor.
  */
-public class IntakeOut extends CommandBase {
+public class IntakeArmUp extends CommandBase {
 
   private Intake intake;
-  private Hopper hopper;
 
-  /**
-   * 
-   */
-  public IntakeOut(Intake intakeSubsystem, Hopper hopperSubsystem) {
+  /** Creates a new IntakeArmUp. */
+  public IntakeArmUp(Intake intakeSubsystem) {
     super();
     intake = intakeSubsystem;
-    hopper = hopperSubsystem;
-    addRequirements(intake, hopper);  }
+    addRequirements(intake);
+    // Use addRequirements() here to declare subsystem dependencies.
+  }
 
-
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.intakeMotorOut();
-    hopper.hopperDown();
+    intake.intakeSolenoidIn();
+    intake.intakeStop();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    intake.intakeStop();
-    hopper.hopperStop();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

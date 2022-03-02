@@ -6,7 +6,8 @@ package org.royalrobotics.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import org.royalrobotics.Constants;
+//import org.royalrobotics.Constants;
+import org.royalrobotics.subsystems.Hopper;
 import org.royalrobotics.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -17,10 +18,10 @@ public class ScoreHighGoal extends SequentialCommandGroup {
   private boolean finished;
 
   /** Creates a new ScoreHighGoal. */
-  public ScoreHighGoal(Shooter shooterSubsystem) {
+  public ScoreHighGoal(Shooter shooterSubsystem, Hopper hopperSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new BringShooterUpToSpeed(shooterSubsystem), new MoveCargoIntoShooter(shooterSubsystem));
+    addCommands(new BringShooterUpToSpeed(shooterSubsystem), new MoveCargoIntoShooter(shooterSubsystem, hopperSubsystem));
     finished = false;
   }
 

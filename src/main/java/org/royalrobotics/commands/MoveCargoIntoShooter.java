@@ -6,16 +6,19 @@ package org.royalrobotics.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import org.royalrobotics.Constants;
+//import org.royalrobotics.Constants;
+import org.royalrobotics.subsystems.Hopper;
 import org.royalrobotics.subsystems.Shooter;
 
 public class MoveCargoIntoShooter extends CommandBase {
 
   private Shooter shooter;
+  private Hopper hopper;
 
   /** Creates a new MoveCargoIntoShooter. */
-  public MoveCargoIntoShooter(Shooter shooterSubsystem) {
+  public MoveCargoIntoShooter(Shooter shooterSubsystem, Hopper hopperSubsytem) {
     shooter = shooterSubsystem;
+    hopper = hopperSubsytem;
     addRequirements(shooter);
   }
 
@@ -27,13 +30,13 @@ public class MoveCargoIntoShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.turnOnHopper();
+    hopper.hopperStopperRetract();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.turnOffHopper();
+    hopper.hopperStop();
     shooter.turnOffPitchingMacine();
   }
 

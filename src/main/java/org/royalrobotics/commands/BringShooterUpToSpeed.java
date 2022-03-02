@@ -6,7 +6,7 @@ package org.royalrobotics.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import com.revrobotics.CANSparkMax;
+//import com.revrobotics.CANSparkMax;
 
 import org.royalrobotics.Constants;
 import org.royalrobotics.subsystems.Shooter;

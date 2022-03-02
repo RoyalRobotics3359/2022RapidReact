@@ -9,28 +9,37 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.royalrobotics.Constants;
 import org.royalrobotics.Constants.CanId;
+import org.royalrobotics.Constants.Pnuematics;
 import org.royalrobotics.Constants.Speeds;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 public class Hopper extends SubsystemBase {
 
   private CANSparkMax hopperMotor;
+  private DoubleSolenoid hopperStopperSolenoid;
 
   public Hopper() {
     if (Constants.HOPPER_EXSISTS){
-      hopperMotor = new CANSparkMax(CanId.hopperMotor.id, MotorType.kBrushless);
+      // FIXME; verify motortype
+      hopperMotor = new CANSparkMax(CanId.hopperMotor.id, MotorType.kBrushed);
       hopperMotor.setInverted(CanId.hopperMotor.reversed);
+      hopperStopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendHopperStopper.channel, Pnuematics.retractHopperStopper.channel);
+      hopperStopperSolenoid.set(Value.kForward);
     }
   }
 
-  public void hopperIn(){
+  public void hopperUp(){
     if (Constants.HOPPER_EXSISTS){
       hopperMotor.set(Speeds.hopperIn.speed);
     }
   }
 
-  public void hopperOut(){
+  public void hopperDown(){
     if (Constants.HOPPER_EXSISTS){
       hopperMotor.set(Speeds.hopperOut.speed);
     }
@@ -41,6 +50,20 @@ public class Hopper extends SubsystemBase {
       hopperMotor.set(0.0);
     }
   }
+
+  public void hopperStopperExtend(){
+    if (Constants.HOPPER_EXSISTS){
+      hopperStopperSolenoid.set(Value.kForward);
+    }
+  }
+
+  public void hopperStopperRetract(){
+    if (Constants.HOPPER_EXSISTS){
+      hopperStopperSolenoid.set(Value.kReverse);
+    }
+  }
+
+
 
   @Override
   public void periodic() {

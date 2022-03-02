@@ -4,13 +4,13 @@
 
 package org.royalrobotics;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
+//import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 //import org.royalrobotics.Constants;
 import org.royalrobotics.subsystems.Climber;
@@ -20,6 +20,7 @@ import org.royalrobotics.subsystems.Intake;
 import org.royalrobotics.subsystems.Shooter;
 import org.royalrobotics.subsystems.Turret;
 import org.royalrobotics.commands.ExtendClimber;
+import org.royalrobotics.commands.IntakeArmUp;
 import org.royalrobotics.commands.IntakeIn;
 import org.royalrobotics.commands.IntakeOut;
 import org.royalrobotics.commands.JoystickDrive;
@@ -27,10 +28,10 @@ import org.royalrobotics.commands.RetractClimber;
 import org.royalrobotics.commands.ScoreHighGoal;
 import org.royalrobotics.commands.TimedDriveForward;
 
-import java.beans.Encoder;
+//import java.beans.Encoder;
 
 import org.royalrobotics.commands.AimShooter;
-import org.royalrobotics.commands.BringShooterUpToSpeed;
+//import org.royalrobotics.commands.BringShooterUpToSpeed;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -50,7 +51,6 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Hopper hopper;
   private Turret turret;
-  private AnalogGyro gyroEncoder;
 
 
   /**
@@ -60,24 +60,26 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drive = new Drive();
-    shooter = new Shooter();
     climber = new Climber();
     intake = new Intake();
     hopper = new Hopper();
     turret = new Turret();
+    shooter = new Shooter(turret);
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     compressor.enableDigital();
     console = new OperatorConsole();
-    gyroEncoder = new AnalogGyro(0);
 
-    console.getShootButton().whenPressed(new ScoreHighGoal(shooter));
+    console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
     console.getRetractClimber().whenPressed(new RetractClimber(climber));
 
+
     console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));
     console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
+    console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
 
-    console.getTurretAimButton().whileHeld(new AimShooter(turret));
+
+    console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
 
 
     CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
@@ -88,9 +90,9 @@ public class Robot extends TimedRobot {
   /** This function is run once each time the robot enters autonomous mode. */
   @Override
   public void autonomousInit() {
-    m_timer.reset();
-    m_timer.start();
-    CommandScheduler.getInstance().schedule(new TimedDriveForward(drive, 3, 0.50));
+    //m_timer.reset();
+    //m_timer.start();
+    //CommandScheduler.getInstance().schedule(new TimedDriveForward(drive, 20, .2));
     
   }
 

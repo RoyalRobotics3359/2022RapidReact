@@ -4,22 +4,29 @@
 
 package org.royalrobotics.commands;
 
+import org.royalrobotics.subsystems.Drive;
 import org.royalrobotics.subsystems.Turret;
-
-import org.royalrobotics.OperatorConsole;
+import org.royalrobotics.Constants;
+//import org.royalrobotics.OperatorConsole;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AimShooter extends CommandBase {
 
   private Turret turret;
-  private OperatorConsole console;
-  private double moveTurret;
+  private Drive drive;
+  //private OperatorConsole console;
+  //private double moveTurret;
   
   /** Creates a new AimShooter. */
-  public AimShooter(Turret turretSubsystem) {
+  public AimShooter(Turret turretSubsystem, Drive driveSubsystem) {
     turret = turretSubsystem;
+    drive = driveSubsystem;
     addRequirements(turret);
+    if (!Constants.TURRET_EXISTS)
+    {
+      addRequirements(drive);
+    }
   }
 
   // Called when the command is initially scheduled.
@@ -31,7 +38,16 @@ public class AimShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.aim();
+    if (Constants.TURRET_EXISTS) {
+      turret.aim();
+    } else {
+      // TODO:  Turn the robot to face the target
+      // Compute angle from Limelight to %power for drive
+      // Set left & right power
+      //drive.turnToAngle(angle);
+
+      drive.aim(turret);
+    }
   }
 
   // Called once the command ends or is interrupted.
