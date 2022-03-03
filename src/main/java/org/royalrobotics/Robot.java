@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -32,6 +33,7 @@ import org.royalrobotics.commands.TimedDriveForward;
 
 import org.royalrobotics.commands.AimShooter;
 //import org.royalrobotics.commands.BringShooterUpToSpeed;
+import org.royalrobotics.commands.BringShooterUpToSpeed;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -52,6 +54,8 @@ public class Robot extends TimedRobot {
   private Hopper hopper;
   private Turret turret;
 
+  private BringShooterUpToSpeed shootCommand;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -68,22 +72,27 @@ public class Robot extends TimedRobot {
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     compressor.enableDigital();
     console = new OperatorConsole();
+    shootCommand = new BringShooterUpToSpeed(shooter);
+    // console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
 
-    console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
+    // CLIMB
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
-    // To avoid damaging the robot we only want to retract the climber while the button is held down
-    // Releaseing the button interrupts the command which stops the winch motor
-    console.getRetractClimber().whenHeld(new RetractClimber(climber));
+    console.getRetractClimber().whileHeld(new RetractClimber(climber));
 
-
+    // INTAKE / HOPPER
     console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));
     console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
     console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
 
 
+
     console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
 
-
+    if (console.getShoot() > 0.67) {
+      CommandScheduler.getInstance().schedule(shootCommand);
+    } else {
+      shootCommand.stop();
+    }
     CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
 
 

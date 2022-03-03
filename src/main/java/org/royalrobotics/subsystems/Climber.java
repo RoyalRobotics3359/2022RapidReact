@@ -38,18 +38,20 @@ public class Climber extends SubsystemBase {
 
   public void extendClimber() {
     if (Constants.CLIMBER_EXISTS) {
-    climbSolenoid.set(Value.kForward);
+      climbSolenoid.set(Value.kForward);
     }
   }
 
   public void retractClimber() {
     if (Constants.CLIMBER_EXISTS) {
-    climbSolenoid.set(Value.kReverse);
+      climbSolenoid.set(Value.kReverse);
     }
   }
 
   public void startMotor() {
-    climbMotor.set(Speeds.climber.speed);
+    if (Constants.CLIMBER_EXISTS){
+      climbMotor.set(Speeds.climber.speed);
+    }
   }
 
   public void stopMotor() {
@@ -57,6 +59,7 @@ public class Climber extends SubsystemBase {
       climbMotor.set(0.0);
     }
   }
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

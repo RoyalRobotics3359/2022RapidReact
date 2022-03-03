@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class OperatorConsole {
 
     private XboxController controller;
-    private JoystickButton shootButton;
     private JoystickButton extendClimber, retractClimber;
     private JoystickButton intakeIn, intakeOut;
     private JoystickButton turretAim;
@@ -19,7 +18,6 @@ public class OperatorConsole {
 
     public OperatorConsole() {
         controller = new XboxController(Constants.CONTROLLER_ID);
-        shootButton = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         extendClimber = new JoystickButton(controller, XboxController.Button.kX.value);
         retractClimber = new JoystickButton(controller, XboxController.Button.kY.value);
         intakeIn = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
@@ -34,10 +32,6 @@ public class OperatorConsole {
 
     public JoystickButton getRetractClimber() {
         return retractClimber;
-    }
-
-    public JoystickButton getShootButton() {
-        return shootButton;
     }
 
     public JoystickButton getIntakeInButton(){
@@ -73,5 +67,7 @@ public class OperatorConsole {
         return controller.getRawAxis(4);
     }
 
-
+    public double getShoot() {
+        return controller.getRawAxis(XboxController.Axis.kRightTrigger.value);
+    }
 }

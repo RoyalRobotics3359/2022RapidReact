@@ -40,7 +40,8 @@ public class BringShooterUpToSpeed extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //System.out.println("Shoot::end(" + interrupted + ")");
+    // FIXME:  For testing only, normally we want the shooter to keep running
+    shooter.turnOffPitchingMacine();
   }
 
   public boolean isReadyToShoot() {
@@ -51,6 +52,10 @@ public class BringShooterUpToSpeed extends CommandBase {
     return ready;
   }
 
+  public void stop() {
+    shooter.turnOffPitchingMacine();
+  }
+  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {

@@ -11,10 +11,10 @@ public class Constants {
         // motor controllers on 40 amp breaker
         frontLeft(3, false),
         frontRight(2, true),
-        rearLeft(6, false),//changed from 4
+        rearLeft(6, false),     //FIXME:  Should be 4
         rearRight(1, true),
-        climber(4, true),
-        shooter(5, false),
+        climber(10, true),      // FIXME:  Should be 6
+        shooter(8, false),      // FIXME:  Should be 8
         // motor controllers on 20 amp breaker
         intakeArm(7, false),
         hopperMotor(8, false),

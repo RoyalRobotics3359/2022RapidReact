@@ -115,13 +115,10 @@ public class Drive extends SubsystemBase {
 
         double tx =  targetOffset_H.getDouble(0.0);
 
-        if (tx > 1.0){
-            leftMaster.set(-.1);
-            rightMaster.set(.1);
-        } else if (tx < -1.0){
-            leftMaster.set(.1);
-            rightMaster.set(-.1);
-        } else{
+        if (tx > 1.0 || tx < -1.0){
+            leftMaster.set(Math.signum(tx)*-.1);
+            rightMaster.set(Math.signum(tx)*.1);
+        } else {
             leftMaster.set(0.0);
             rightMaster.set(0.0);
         }
