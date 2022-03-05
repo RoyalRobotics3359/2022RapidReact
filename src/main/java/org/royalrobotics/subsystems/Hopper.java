@@ -29,7 +29,7 @@ public class Hopper extends SubsystemBase {
       hopperMotor = new CANSparkMax(CanId.hopperMotor.id, MotorType.kBrushed);
       hopperMotor.setInverted(CanId.hopperMotor.reversed);
       hopperStopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendHopperStopper.channel, Pnuematics.retractHopperStopper.channel);
-      hopperStopperSolenoid.set(Value.kForward);
+      hopperStopperExtend();
     }
   }
 

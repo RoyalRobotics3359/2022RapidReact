@@ -22,7 +22,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Climber extends SubsystemBase {
 
-  private DoubleSolenoid climbSolenoid; 
+  private DoubleSolenoid climbSolenoid;
   private CANSparkMax climbMotor;
 
 
@@ -45,6 +45,7 @@ public class Climber extends SubsystemBase {
   public void retractClimber() {
     if (Constants.CLIMBER_EXISTS) {
       climbSolenoid.set(Value.kReverse);
+      startMotor();
     }
   }
 
@@ -59,7 +60,7 @@ public class Climber extends SubsystemBase {
       climbMotor.set(0.0);
     }
   }
-  
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

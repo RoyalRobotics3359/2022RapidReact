@@ -21,7 +21,7 @@ public class ScoreHighGoal extends SequentialCommandGroup {
   public ScoreHighGoal(Shooter shooterSubsystem, Hopper hopperSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new BringShooterUpToSpeed(shooterSubsystem), new MoveCargoIntoShooter(shooterSubsystem, hopperSubsystem));
+    //addCommands(new BringShooterUpToSpeed(shooterSubsystem), new MoveCargoIntoShooter(shooterSubsystem, hopperSubsystem));
     finished = false;
   }
 

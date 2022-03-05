@@ -43,6 +43,7 @@ public class RetractClimber extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(Constants.CLIMBER_RETRACT_TIME);
+    //return timer.hasElapsed(Constants.CLIMBER_RETRACT_TIME);
+    return false;
   }
 }

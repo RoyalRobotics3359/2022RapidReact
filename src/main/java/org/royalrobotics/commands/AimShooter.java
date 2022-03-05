@@ -5,6 +5,7 @@
 package org.royalrobotics.commands;
 
 import org.royalrobotics.subsystems.Drive;
+import org.royalrobotics.subsystems.DriveSubsystem;
 import org.royalrobotics.subsystems.Turret;
 import org.royalrobotics.Constants;
 //import org.royalrobotics.OperatorConsole;
@@ -46,7 +47,7 @@ public class AimShooter extends CommandBase {
       // Set left & right power
       //drive.turnToAngle(angle);
 
-      drive.aim(turret);
+      //drive.aim(turret);
     }
   }
 

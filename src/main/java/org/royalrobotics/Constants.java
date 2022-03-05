@@ -1,5 +1,10 @@
 package org.royalrobotics;
 
+import org.royalrobotics.commands.ExtendClimber;
+import org.royalrobotics.commands.RetractClimber;
+
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 public class Constants {
     
     //
@@ -14,10 +19,10 @@ public class Constants {
         rearLeft(6, false),     //FIXME:  Should be 4
         rearRight(1, true),
         climber(10, true),      // FIXME:  Should be 6
-        shooter(8, false),      // FIXME:  Should be 8
+        shooter(8, true),   
         // motor controllers on 20 amp breaker
         intakeArm(7, false),
-        hopperMotor(8, false),
+        hopperMotor(11, false),
         turretMotor(9, false);
 
         public final int id;
@@ -30,7 +35,7 @@ public class Constants {
     }
 
     public enum Speeds {
-        shoot(.95),
+        shoot(1.0),
         hopperIn(.40),
         hopperOut(-.40),
         driving(0.70),
@@ -68,7 +73,7 @@ public class Constants {
     public static final double CLIMBER_RETRACT_TIME = 3.0;
 
 
-    public static final double SHOOTER_RPM_MINIMUM = 4000.0;
+    public static final double SHOOTER_RPM_MINIMUM = 5200.0;
 
     public static final int LEFT_JOYSTICK_ID = 1;
     public static final int RIGHT_JOYSTICK_ID = 5;
@@ -77,14 +82,41 @@ public class Constants {
 
     public static final double JOYSTICK_DEADBAND = 0.05;
 
+    public static final double MAX_VOLTAGE = 10.0;
+
+    // ROBOT PROFILE CONSTANTS\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
+    // values for your robot.
+    public static final double ksVolts = 0.17674;
+    public static final double kvVoltSecondsPerMeter = 3.4213;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.4197;
+
+    // P value for drive
+    public static final double kPDriveVel = 4.3267;
+
+    public static final double kTrackwidthMeters = 0.6096;
+    public static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+
+    public static final double GEAR_RATIO = 10.71;
+
+    public static final double WHEEL_RADIUS = 3.0;
+
     ///////////////////////////[[[[[[[[[[[[[LOGIC]]]]]]]]]]]]]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     public static final boolean HOPPER_EXSISTS = false;
-    public static final boolean SHOOTER_EXSISTS = false;
-    public static final boolean INTAKE_EXSISTS = false;
-    public static final boolean CARGOPICKUP_EXISTS = false;
+    public static final boolean SHOOTER_EXSISTS = true;
+    public static final boolean INTAKE_EXSISTS = true;
+    public static final boolean CARGOPICKUP_EXISTS = true;
     public static final boolean CLIMBER_EXISTS = false;
-    public static final boolean DRIVE_EXISTS = true;
+    public static final boolean DRIVE_EXISTS = false;
     public static final boolean TURRET_EXISTS = false;
 
 

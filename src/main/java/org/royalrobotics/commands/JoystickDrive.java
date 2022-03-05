@@ -7,6 +7,7 @@ package org.royalrobotics.commands;
 import org.royalrobotics.Constants;
 import org.royalrobotics.OperatorConsole;
 import org.royalrobotics.subsystems.Drive;
+import org.royalrobotics.subsystems.DriveSubsystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -38,7 +39,10 @@ public class JoystickDrive extends CommandBase {
     double rightPercent = console.getRightY() * Constants.Speeds.driving.speed;
     SmartDashboard.putNumber("LEFT P", leftPercent);
     SmartDashboard.putNumber("RIGHT P", rightPercent);
+    //drive.tankDriveVolts(leftPercent * Constants.MAX_VOLTAGE, rightPercent * Constants.MAX_VOLTAGE);
     drive.setSpeed(leftPercent, rightPercent);
+
+    
   }
 
   // Called once the command ends or is interrupted.

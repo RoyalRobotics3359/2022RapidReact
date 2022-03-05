@@ -43,6 +43,7 @@ public class IntakeIn extends CommandBase {
   public void end(boolean interrupted) {
     intake.intakeStop();
     hopper.hopperStop();
+    intake.intakeSolenoidIn();
   }
 
   // Returns true when the command should end.

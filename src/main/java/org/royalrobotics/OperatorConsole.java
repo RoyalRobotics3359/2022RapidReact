@@ -15,6 +15,8 @@ public class OperatorConsole {
     private JoystickButton intakeIn, intakeOut;
     private JoystickButton turretAim;
     private JoystickButton intakeArmUp;
+    private JoystickButton climberMotorUpwards, climberMotorDownwards;
+    private JoystickButton shooterButton;
 
     public OperatorConsole() {
         controller = new XboxController(Constants.CONTROLLER_ID);
@@ -24,6 +26,9 @@ public class OperatorConsole {
         intakeOut = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         intakeArmUp = new JoystickButton(controller, XboxController.Button.kB.value);
         turretAim = new JoystickButton(controller, XboxController.Button.kA.value);
+        climberMotorUpwards = new JoystickButton(controller, XboxController.Button.kStart.value);
+        climberMotorDownwards = new JoystickButton(controller, XboxController.Button.kBack.value);
+        shooterButton = new JoystickButton(controller, XboxController.Button.kRightStick.value);
     }
 
     public JoystickButton getExtendClimberButton() {
@@ -50,6 +55,13 @@ public class OperatorConsole {
         return intakeArmUp;
     }
 
+    public JoystickButton getClimberMotorUpwards(){
+        return climberMotorUpwards;
+    }
+
+    public JoystickButton getClimberMotorDownwards(){
+        return climberMotorDownwards;
+    }
 
     public double getLeftY() {
         return controller.getRawAxis(1) * -1.0; 
@@ -68,6 +80,6 @@ public class OperatorConsole {
     }
 
     public double getShoot() {
-        return controller.getRawAxis(XboxController.Axis.kRightTrigger.value);
+        return controller.getRawAxis(XboxController.Axis.kLeftTrigger.value);
     }
 }

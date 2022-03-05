@@ -3,6 +3,7 @@ package org.royalrobotics.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.opencv.features2d.KAZE;
@@ -49,13 +50,15 @@ public class Shooter extends SubsystemBase {
             turret = turretSubsystem;
 
             shooterMotor = new CANSparkMax(CanId.shooter.id, MotorType.kBrushless);
+            shooterMotor.restoreFactoryDefaults();
             shooterMotor.setInverted(CanId.shooter.reversed);
+            shooterMotor.setIdleMode(IdleMode.kCoast);
 
-            shootercontroller = shooterMotor.getPIDController();
-            shootercontroller.setP(KP);
-            shootercontroller.setI(KI);
-            shootercontroller.setD(KD);
-            shootercontroller.setReference(0.0, CANSparkMax.ControlType.kVelocity);//sets it equal to 0
+            // shootercontroller = shooterMotor.getPIDController();
+            // shootercontroller.setP(KP);
+            // shootercontroller.setI(KI);
+            // shootercontroller.setD(KD);
+            // shootercontroller.setReference(0.0, CANSparkMax.ControlType.kVelocity);//sets it equal to 0
         }
     }
 
@@ -88,9 +91,6 @@ public class Shooter extends SubsystemBase {
         double rpmSetpoint = ((distanceFromGoal -1) * 200)  + (3000);// quick function that adds 200rpm to shooter for every inch increased
 
         shootercontroller.setReference(rpmSetpoint, CANSparkMax.ControlType.kVelocity);
-
-
-
     }
 
 }

@@ -9,13 +9,16 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 
 //import org.royalrobotics.Constants;
 import org.royalrobotics.subsystems.Climber;
 import org.royalrobotics.subsystems.Drive;
+import org.royalrobotics.subsystems.DriveSubsystem;
 import org.royalrobotics.subsystems.Hopper;
 import org.royalrobotics.subsystems.Intake;
 import org.royalrobotics.subsystems.Shooter;
@@ -72,7 +75,7 @@ public class Robot extends TimedRobot {
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     compressor.enableDigital();
     console = new OperatorConsole();
-    shootCommand = new BringShooterUpToSpeed(shooter);
+    shootCommand = new BringShooterUpToSpeed(shooter, hopper);
     // console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
 
     // CLIMB
@@ -82,19 +85,20 @@ public class Robot extends TimedRobot {
     // INTAKE / HOPPER
     console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));
     console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
-    console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
+    //console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
 
 
 
     console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
 
-    if (console.getShoot() > 0.67) {
-      CommandScheduler.getInstance().schedule(shootCommand);
-    } else {
-      shootCommand.stop();
-    }
-    CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
+    //console.getShoot().whileHeld(new BringShooterUpToSpeed(shooter));
 
+    CommandScheduler.getInstance().setDefaultCommand(shooter, shootCommand);
+
+
+    //CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
+
+    
 
   }
 
@@ -121,7 +125,28 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during teleoperated mode. */
   @Override
   public void teleopPeriodic() {
+
+    //SmartDashboard.putNumber("shooter value", console.getShoot());
+
+    System.out.println("trigger: "+console.getShoot() +", "+shootCommand.isRunning());
+
+    if (console.getShoot() > 0.67) 
+    {
+      if (!shootCommand.isRunning()) 
+      {
+        System.out.println("running");
+        shootCommand.setRunning();
+        // CommandScheduler.getInstance().schedule(shootCommand);
+      }
+    }
+    else
+    {
+      shootCommand.stop();
+    }
+
     CommandScheduler.getInstance().run();
+
+
 
     // FIXME:  This is for debugging only
     

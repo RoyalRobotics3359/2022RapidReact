@@ -25,7 +25,6 @@ public class Drive extends SubsystemBase {
     private NetworkTable table;
 
     private RelativeEncoder LeftMasterEncoder;
-    public Encoder encoder;
 
     private OperatorConsole oc;
 
@@ -40,7 +39,6 @@ public class Drive extends SubsystemBase {
     public Drive() {
         super();
         if (Constants.DRIVE_EXISTS) {
-        encoder = new Encoder(0, 1); 
         leftMaster = new CANSparkMax(CanId.frontLeft.id, MotorType.kBrushless);
         leftFollower = new CANSparkMax(CanId.rearLeft.id, MotorType.kBrushless);
         rightMaster = new CANSparkMax(CanId.frontRight.id, MotorType.kBrushless);
