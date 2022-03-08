@@ -4,8 +4,16 @@
 
 package org.royalrobotics;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 //import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,6 +40,12 @@ import org.royalrobotics.commands.RetractClimber;
 import org.royalrobotics.commands.ScoreHighGoal;
 import org.royalrobotics.commands.TimedDriveForward;
 
+import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
+
+import javax.lang.model.element.ModuleElement.Directive;
+
 //import java.beans.Encoder;
 
 import org.royalrobotics.commands.AimShooter;
@@ -48,7 +62,9 @@ public class Robot extends TimedRobot {
   
   private Timer m_timer = new Timer();
 
+  private DriveSubsystem driveSubsystem;
   private Drive drive;
+
   private OperatorConsole console;
   private Shooter shooter;
   private Climber climber;
@@ -56,9 +72,13 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Hopper hopper;
   private Turret turret;
+  private RobotContainer container;
+
 
   private BringShooterUpToSpeed shootCommand;
+  private IntakeIn intakeIn;
 
+  private UsbCamera camera;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -66,6 +86,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    //driveSubsystem = new DriveSubsystem();
     drive = new Drive();
     climber = new Climber();
     intake = new Intake();
@@ -76,27 +97,52 @@ public class Robot extends TimedRobot {
     compressor.enableDigital();
     console = new OperatorConsole();
     shootCommand = new BringShooterUpToSpeed(shooter, hopper);
-    // console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
+    intakeIn = new IntakeIn(intake, hopper, console.getIntakeInButton());
+    container = new RobotContainer();
+   // console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
+
+    //  Enabling Camera Video
+    camera = CameraServer.startAutomaticCapture();
+    // Setting the resolution and brightness
+    camera.setResolution(640, 480);
+    camera.setBrightness(50);
+
+    // Get a CvSink. This will capture Mats from the camera
+    CvSink cvSink = CameraServer.getVideo();
+    // Setup a CvSource. This will send images back to the Dashboard
+    CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
+    // set FPS
+    camera.setFPS(24);
+
 
     // CLIMB
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
     console.getRetractClimber().whileHeld(new RetractClimber(climber));
 
     // INTAKE / HOPPER
-    console.getIntakeInButton().whileHeld(new IntakeIn(intake, hopper));
+    //console.getIntakeInButton().whenHeld(new IntakeIn(intake, hopper));
     console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
     //console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
 
 
 
-    console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
+    //console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
 
     //console.getShoot().whileHeld(new BringShooterUpToSpeed(shooter));
 
+
+    CommandScheduler.getInstance().setDefaultCommand(intake, intakeIn);
     CommandScheduler.getInstance().setDefaultCommand(shooter, shootCommand);
 
 
-    //CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
+    //CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, driveSubsystem));
+    CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
+
+
+    
+   
+    
+    
 
     
 
@@ -105,16 +151,19 @@ public class Robot extends TimedRobot {
   /** This function is run once each time the robot enters autonomous mode. */
   @Override
   public void autonomousInit() {
-    //m_timer.reset();
-    //m_timer.start();
+    m_timer.reset();
+    m_timer.start();
+    //CommandScheduler.getInstance().schedule(new TimedDriveForward(driveSubsystem, 3, .3));
+
     //CommandScheduler.getInstance().schedule(new TimedDriveForward(drive, 20, .2));
-    
+    //container.getAutonomousCommand().schedule();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
+    //CommandScheduler.getInstance().run();
+
   }
 
   /** This function is called once each time the robot enters teleoperated mode. */
@@ -128,13 +177,13 @@ public class Robot extends TimedRobot {
 
     //SmartDashboard.putNumber("shooter value", console.getShoot());
 
-    System.out.println("trigger: "+console.getShoot() +", "+shootCommand.isRunning());
+    //System.out.println("trigger: "+console.getShoot() +", "+shootCommand.isRunning());
 
-    if (console.getShoot() > 0.67) 
+    if (console.getShoot() > 0.67)
     {
       if (!shootCommand.isRunning()) 
       {
-        System.out.println("running");
+        //System.out.println("running");
         shootCommand.setRunning();
         // CommandScheduler.getInstance().schedule(shootCommand);
       }
@@ -145,12 +194,6 @@ public class Robot extends TimedRobot {
     }
 
     CommandScheduler.getInstance().run();
-
-
-
-    // FIXME:  This is for debugging only
-    
-    //turret.aim();
   }
 
   /** This function is called once each time the robot enters test mode. */

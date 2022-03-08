@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class AimShooter extends CommandBase {
 
   private Turret turret;
-  private Drive drive;
+  private DriveSubsystem drive;
   //private OperatorConsole console;
   //private double moveTurret;
   
   /** Creates a new AimShooter. */
-  public AimShooter(Turret turretSubsystem, Drive driveSubsystem) {
+  public AimShooter(Turret turretSubsystem, DriveSubsystem driveSubsystem) {
     turret = turretSubsystem;
     drive = driveSubsystem;
     addRequirements(turret);

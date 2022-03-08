@@ -32,6 +32,7 @@ public class RetractClimber extends CommandBase {
   @Override
   public void execute() {
     climber.retractClimber();
+    // climber.startMotor();
   }
 
   // Called once the command ends or is interrupted.

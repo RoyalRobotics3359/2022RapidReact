@@ -22,8 +22,8 @@ public class OperatorConsole {
         controller = new XboxController(Constants.CONTROLLER_ID);
         extendClimber = new JoystickButton(controller, XboxController.Button.kX.value);
         retractClimber = new JoystickButton(controller, XboxController.Button.kY.value);
-        intakeIn = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
-        intakeOut = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        intakeIn = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
+        intakeOut = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         intakeArmUp = new JoystickButton(controller, XboxController.Button.kB.value);
         turretAim = new JoystickButton(controller, XboxController.Button.kA.value);
         climberMotorUpwards = new JoystickButton(controller, XboxController.Button.kStart.value);

@@ -28,7 +28,7 @@ public class BringShooterUpToSpeed extends CommandBase {
     hopper = hopperSubsystem;
     running = false;
     ready = false;
-    addRequirements(shooter, hopper);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -43,6 +43,7 @@ public class BringShooterUpToSpeed extends CommandBase {
   @Override
   public void execute() {
     if (running) {
+      // System.out.println("BringShooterUpToSpeed.execute()");
       shooter.turnOnPichingMachine();
       SmartDashboard.putNumber("Shooter RPM", shooter.getRPM());
       if (isReadyToShoot()){
@@ -56,7 +57,7 @@ public class BringShooterUpToSpeed extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // FIXME:  For testing only, normally we want the shooter to keep running
+    // System.out.println("BringShooterUpToSpeed.end(" + interrupted + ")");
     shooter.turnOffPitchingMacine();
     hopper.hopperStop();
     hopper.hopperStopperExtend();
@@ -72,7 +73,10 @@ public class BringShooterUpToSpeed extends CommandBase {
 
   public void stop() {
     shooter.turnOffPitchingMacine();
+    hopper.hopperStop();
+    hopper.hopperStopperExtend();
     running = false;
+
   }
 
   public boolean isRunning(){

@@ -3,8 +3,9 @@ package org.royalrobotics.subsystems;
 import org.royalrobotics.Constants;
 import org.royalrobotics.Constants.CanId;
 
-
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
@@ -43,6 +45,19 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final RelativeEncoder m_leftEncoder, m_rightEncoder;
 
+  private PIDController leftPIDController;
+  private PIDController rightPIDController;
+
+  private static final double LEFT_KP = 0.0;
+  private static final double LEFT_KI = 0.0;
+  private static final double LEFT_KD = 0.0;
+
+  private static final double RIGHT_KP = 0.0;
+  private static final double RIGHT_KI = 0.0;
+  private static final double RIGHT_KD = 0.0;
+
+
+
 
 
 
@@ -52,6 +67,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
+
+
+  private final DifferentialDriveKinematics m_kinematics;
 
 
 
@@ -77,11 +95,20 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftEncoder = leftMaster.getEncoder();
     m_rightEncoder = rightMaster.getEncoder();
 
+    /***
+     * These are regular PID controllers because the Ramsete Controller that these are used in in the Robotontainer class
+     * only accepts PIDController not SparkMaxPIDController
+     */
+    leftPIDController = new PIDController(LEFT_KP, LEFT_KI, LEFT_KD);
+    leftPIDController = new PIDController(RIGHT_KP, RIGHT_KI, RIGHT_KD);
+
 
 
 
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+
+    m_kinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters); 
   }
 
   @Override
@@ -99,6 +126,14 @@ public class DriveSubsystem extends SubsystemBase {
   public double getRightDistanceTraveled() {
     return m_rightEncoder.getVelocity() / Constants.GEAR_RATIO * 2.0 * Math.PI * Units.inchesToMeters(Constants.WHEEL_RADIUS) / 60.0;
   }
+
+  public PIDController getLeftPidController(){
+    return leftPIDController;
+  }
+
+  public PIDController getRightPIDCPidController(){
+    return rightPIDController;
+  }
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -115,6 +150,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftDistanceTraveled(), getRightDistanceTraveled());
+  }
+
+  public DifferentialDriveKinematics getKinematics(){
+    return m_kinematics;
   }
 
   /**
@@ -182,6 +221,9 @@ public class DriveSubsystem extends SubsystemBase {
     return m_rightEncoder;
   }
 
+  
+  
+
   /**
    * Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
    *
@@ -213,4 +255,6 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return -1.0 * m_gyro.getRate();
   }
+
+
 }
