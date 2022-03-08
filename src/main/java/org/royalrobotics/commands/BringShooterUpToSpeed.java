@@ -28,7 +28,7 @@ public class BringShooterUpToSpeed extends CommandBase {
     hopper = hopperSubsystem;
     running = false;
     ready = false;
-    addRequirements(shooter, hopper);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -72,7 +72,10 @@ public class BringShooterUpToSpeed extends CommandBase {
 
   public void stop() {
     shooter.turnOffPitchingMacine();
+    hopper.hopperStop();
+    hopper.hopperStopperExtend();
     running = false;
+
   }
 
   public boolean isRunning(){

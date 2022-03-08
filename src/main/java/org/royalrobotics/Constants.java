@@ -16,14 +16,14 @@ public class Constants {
         // motor controllers on 40 amp breaker
         frontLeft(3, false),
         frontRight(2, true),
-        rearLeft(6, false),     //FIXME:  Should be 4
+        rearLeft(4, false),  
         rearRight(1, true),
-        climber(10, true),      // FIXME:  Should be 6
+        climber(6, true),     
         shooter(8, true),   
         // motor controllers on 20 amp breaker
         intakeArm(7, false),
-        hopperMotor(11, false),
-        turretMotor(9, false);
+        hopperMotor(9, false),
+        turretMotor(10, false);
 
         public final int id;
         public final boolean reversed;
@@ -36,8 +36,8 @@ public class Constants {
 
     public enum Speeds {
         shoot(1.0),
-        hopperIn(.40),
-        hopperOut(-.40),
+        hopperIn(.50),
+        hopperOut(-.50),
         driving(0.70),
         intakeIn(0.70),
         intakeOut(-0.70),
@@ -73,7 +73,7 @@ public class Constants {
     public static final double CLIMBER_RETRACT_TIME = 3.0;
 
 
-    public static final double SHOOTER_RPM_MINIMUM = 5200.0;
+    public static final double SHOOTER_RPM_MINIMUM = 4000.0;
 
     public static final int LEFT_JOYSTICK_ID = 1;
     public static final int RIGHT_JOYSTICK_ID = 5;
@@ -111,12 +111,12 @@ public class Constants {
 
     ///////////////////////////[[[[[[[[[[[[[LOGIC]]]]]]]]]]]]]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    public static final boolean HOPPER_EXSISTS = false;
-    public static final boolean SHOOTER_EXSISTS = true;
-    public static final boolean INTAKE_EXSISTS = true;
-    public static final boolean CARGOPICKUP_EXISTS = true;
-    public static final boolean CLIMBER_EXISTS = false;
-    public static final boolean DRIVE_EXISTS = false;
+    public static final boolean HOPPER_EXSISTS = true;
+    public static final boolean SHOOTER_EXSISTS = true; //true
+    public static final boolean INTAKE_EXSISTS = true; //true
+    public static final boolean CARGOPICKUP_EXISTS = false;
+    public static final boolean CLIMBER_EXISTS = true;
+    public static final boolean DRIVE_EXISTS = true; //true
     public static final boolean TURRET_EXISTS = false;
 
 

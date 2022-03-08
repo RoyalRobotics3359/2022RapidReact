@@ -29,10 +29,12 @@ public class Climber extends SubsystemBase {
   public Climber() {
     if (Constants.CLIMBER_EXISTS) {
       climbMotor = new CANSparkMax(CanId.climber.id, MotorType.kBrushed);
+      climbMotor.restoreFactoryDefaults();
+      climbMotor.setIdleMode(IdleMode.kBrake);
       climbMotor.setInverted(CanId.climber.reversed);
-      stopMotor();
       climbSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendClimber.channel, Pnuematics.retractClimber.channel);
       retractClimber();
+      //stopMotor();
     }
   }
 

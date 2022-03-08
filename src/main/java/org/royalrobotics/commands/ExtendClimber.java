@@ -14,9 +14,11 @@ public class ExtendClimber extends CommandBase {
 
   private Climber climber;
   private Timer timer;
+  private boolean done;
 
   public ExtendClimber(Climber c) {
     climber = c;
+    done = false;
     addRequirements(climber);
 
     timer = new Timer();
@@ -36,11 +38,15 @@ public class ExtendClimber extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    done = true;
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(Constants.CLIMBER_EXTEND_TIME);
+    //return timer.hasElapsed(Constants.CLIMBER_EXTEND_TIME);
+    
+   return false;
   }
 }

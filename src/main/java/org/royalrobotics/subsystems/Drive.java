@@ -111,7 +111,7 @@ public class Drive extends SubsystemBase {
         double horizantal_angle = turret.getHorizantalAngle();
         double vertical_angle = turret.getVerticalAngle();
 
-        double tx =  targetOffset_H.getDouble(0.0);
+        double tx = targetOffset_H.getDouble(0.0);
 
         if (tx > 1.0 || tx < -1.0){
             leftMaster.set(Math.signum(tx)*-.1);

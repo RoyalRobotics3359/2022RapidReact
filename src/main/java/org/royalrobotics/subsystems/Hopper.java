@@ -5,6 +5,7 @@
 package org.royalrobotics.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.royalrobotics.Constants;
@@ -27,6 +28,8 @@ public class Hopper extends SubsystemBase {
     if (Constants.HOPPER_EXSISTS){
       // FIXME; verify motortype
       hopperMotor = new CANSparkMax(CanId.hopperMotor.id, MotorType.kBrushed);
+      hopperMotor.restoreFactoryDefaults();
+      hopperMotor.setIdleMode(IdleMode.kCoast);
       hopperMotor.setInverted(CanId.hopperMotor.reversed);
       hopperStopperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendHopperStopper.channel, Pnuematics.retractHopperStopper.channel);
       hopperStopperExtend();

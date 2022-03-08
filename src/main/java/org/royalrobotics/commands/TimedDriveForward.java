@@ -3,20 +3,22 @@ package org.royalrobotics.commands;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.royalrobotics.Constants;
 import org.royalrobotics.subsystems.Drive;
+import org.royalrobotics.subsystems.DriveSubsystem;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TimedDriveForward extends CommandBase {
   
-    private Drive drive;
+    private DriveSubsystem drive;
     Timer timer;
     long seconds;
     double percent;
 
-  public TimedDriveForward(Drive driveSubsystem, long secondsToDrive, double percentPower) {
+  public TimedDriveForward(DriveSubsystem driveSubsystem, long seconds, double percentPower) {
     timer = new Timer();
     drive = driveSubsystem;
-    seconds = secondsToDrive;
     percent = percentPower;
     addRequirements(drive);
   }
@@ -31,14 +33,16 @@ public class TimedDriveForward extends CommandBase {
   @Override
   public void execute() {
       // Drive forward at 50% power
-      drive.setSpeed(percent, percent);
+      drive.tankDriveVolts(percent * Constants.MAX_VOLTAGE, percent * Constants.MAX_VOLTAGE);
+
+      
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     timer = null;
-    drive.stop();
+    drive.tankDriveVolts(0.0, 0.0);
   }
 
   // Returns true when the command should end.
