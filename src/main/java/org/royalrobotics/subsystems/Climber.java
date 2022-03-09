@@ -33,8 +33,7 @@ public class Climber extends SubsystemBase {
       climbMotor.setIdleMode(IdleMode.kBrake);
       climbMotor.setInverted(CanId.climber.reversed);
       climbSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Pnuematics.extendClimber.channel, Pnuematics.retractClimber.channel);
-      retractClimber();
-      //stopMotor();
+      stopMotor();
     }
   }
 

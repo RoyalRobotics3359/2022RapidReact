@@ -18,15 +18,13 @@ public class IntakeIn extends CommandBase {
 
   private Intake intake;
   private Hopper hopper;
-  private JoystickButton button;
 
   /** Creates a new IntakeIn. */
-  public IntakeIn(Intake intakeSubsystem, Hopper hopperSubsystem, JoystickButton joystickButton) {
+  public IntakeIn(Intake intakeSubsystem, Hopper hopperSubsystem) {
     super();
     intake = intakeSubsystem;
     hopper = hopperSubsystem;
-    button = joystickButton;
-    addRequirements(intake);
+    addRequirements(intake, hopper);
   }
 
   // Called when the command is initially scheduled.
@@ -36,18 +34,10 @@ public class IntakeIn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (button.get()){
-      // System.out.println("IntakeIn.execute()");
-      intake.intakeSolenoidOut();
-      intake.intakeMotorIn();
-      hopper.hopperUp();
-    } 
-    else
-    {
-      intake.intakeStop();
-      hopper.hopperStop();
-      intake.intakeSolenoidIn();
-    }
+    // System.out.println("IntakeIn.execute()");
+    intake.intakeSolenoidOut();
+    intake.intakeMotorIn();
+    hopper.hopperUp();
   }
 
   // Called once the command ends or is interrupted.

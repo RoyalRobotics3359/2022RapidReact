@@ -44,7 +44,12 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.I2C;
+
 import javax.lang.model.element.ModuleElement.Directive;
+
+import com.revrobotics.ColorSensorV3;
 
 //import java.beans.Encoder;
 
@@ -80,6 +85,11 @@ public class Robot extends TimedRobot {
 
   private UsbCamera camera;
 
+  
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;
+
+  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -87,7 +97,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     //driveSubsystem = new DriveSubsystem();
-    drive = new Drive();
+    driveSubsystem = new DriveSubsystem();
     climber = new Climber();
     intake = new Intake();
     hopper = new Hopper();
@@ -96,56 +106,48 @@ public class Robot extends TimedRobot {
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     compressor.enableDigital();
     console = new OperatorConsole();
-    shootCommand = new BringShooterUpToSpeed(shooter, hopper);
-    intakeIn = new IntakeIn(intake, hopper, console.getIntakeInButton());
+    // intakeIn = new IntakeIn(intake, hopper, console.getIntakeInButton());
     container = new RobotContainer();
    // console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
 
-    //  Enabling Camera Video
+     //  Enabling Camera Video
     camera = CameraServer.startAutomaticCapture();
-    // Setting the resolution and brightness
+     // Setting the resolution and brightness
     camera.setResolution(640, 480);
     camera.setBrightness(50);
 
     // Get a CvSink. This will capture Mats from the camera
     CvSink cvSink = CameraServer.getVideo();
     // Setup a CvSource. This will send images back to the Dashboard
-    CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
+    CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 720);
     // set FPS
     camera.setFPS(24);
+
+    // //Color Sensor
+    // Color detectedColor = m_colorSensor.getColor();
+
+    // SmartDashboard.putNumber("Red", detectedColor.red);
+    // SmartDashboard.putNumber("Blue", detectedColor.blue);
 
 
     // CLIMB
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
-    console.getRetractClimber().whileHeld(new RetractClimber(climber));
+    console.getRetractClimber().whenHeld(new RetractClimber(climber));
 
     // INTAKE / HOPPER
-    //console.getIntakeInButton().whenHeld(new IntakeIn(intake, hopper));
-    console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
+    console.getIntakeInButton().whenHeld(new IntakeIn(intake, hopper));
+    //console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
     //console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
-
-
 
     //console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
 
     //console.getShoot().whileHeld(new BringShooterUpToSpeed(shooter));
+    // CommandScheduler.getInstance().setDefaultCommand(intake, intakeIn);
+    // CommandScheduler.getInstance().setDefaultCommand(shooter, shootCommand);
 
 
-    CommandScheduler.getInstance().setDefaultCommand(intake, intakeIn);
-    CommandScheduler.getInstance().setDefaultCommand(shooter, shootCommand);
-
-
-    //CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, driveSubsystem));
-    CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
-
-
-    
-   
-    
-    
-
-    
-
+    CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, driveSubsystem));
+    //CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -181,16 +183,21 @@ public class Robot extends TimedRobot {
 
     if (console.getShoot() > 0.67)
     {
+      if (shootCommand == null) {
+        shootCommand = new BringShooterUpToSpeed(shooter, hopper);
+      }
       if (!shootCommand.isRunning()) 
       {
         //System.out.println("running");
-        shootCommand.setRunning();
-        // CommandScheduler.getInstance().schedule(shootCommand);
+        CommandScheduler.getInstance().schedule(shootCommand);
       }
     }
     else
     {
-      shootCommand.stop();
+      if (shootCommand != null) {
+        shootCommand.finish();
+        shootCommand = null;
+      }
     }
 
     CommandScheduler.getInstance().run();
@@ -206,6 +213,19 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     CommandScheduler.getInstance().run();
+        
+    //Color Sensor
+    Color detectedColor = m_colorSensor.getColor();
+
+    SmartDashboard.putNumber("Red", detectedColor.red);
+    SmartDashboard.putNumber("Blue", detectedColor.blue);
+
+    if (detectedColor.red > detectedColor.blue && Constants.ALLIANCE == "Red") {
+      System.out.println("Red Alliance -- Red Ball");
+      if (detectedColor.blue > detectedColor.red && Constants.ALLIANCE == "Red") {
+        
+      }
+    }
   }
 }
 

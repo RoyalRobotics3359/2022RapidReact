@@ -64,7 +64,11 @@ public class OperatorConsole {
     }
 
     public double getLeftY() {
-        return controller.getRawAxis(1) * -1.0; 
+        double y = controller.getRawAxis(1) * -1.0;
+        if (y >= -Constants.JOYSTICK_DEADBAND && y <= Constants.JOYSTICK_DEADBAND) {
+            y = 0.0;
+        }
+        return y;
     }
 
     public double getLeftX() {
@@ -72,7 +76,11 @@ public class OperatorConsole {
     }
 
     public double getRightY() {
-        return controller.getRawAxis(5) * -1.0; 
+        double y = controller.getRawAxis(5) * -1.0; 
+        if (y >= -Constants.JOYSTICK_DEADBAND && y <= Constants.JOYSTICK_DEADBAND) {
+            y = 0.0;
+        }
+        return y;
     }
 
     public double getRightX() {

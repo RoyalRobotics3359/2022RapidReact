@@ -73,14 +73,14 @@ public class Constants {
     public static final double CLIMBER_RETRACT_TIME = 3.0;
 
 
-    public static final double SHOOTER_RPM_MINIMUM = 4000.0;
+    public static final double SHOOTER_RPM_MINIMUM = 4800.0;
 
     public static final int LEFT_JOYSTICK_ID = 1;
     public static final int RIGHT_JOYSTICK_ID = 5;
 
     public static final int CONTROLLER_ID = 0;
 
-    public static final double JOYSTICK_DEADBAND = 0.05;
+    public static final double JOYSTICK_DEADBAND = 0.1;
 
     public static final double MAX_VOLTAGE = 10.0;
 
@@ -118,6 +118,9 @@ public class Constants {
     public static final boolean CLIMBER_EXISTS = true;
     public static final boolean DRIVE_EXISTS = true; //true
     public static final boolean TURRET_EXISTS = false;
+
+    //////////[ALLIANCE]\\\\\\\\\
+    public static final String ALLIANCE = "red";
 
 
 

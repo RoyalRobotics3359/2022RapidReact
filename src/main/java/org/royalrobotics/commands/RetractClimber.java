@@ -31,14 +31,16 @@ public class RetractClimber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("RetractClimber.execute()");
     climber.retractClimber();
-    // climber.startMotor();
+    climber.startMotor();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     climber.stopMotor();
+    System.out.println("RetractClimber.end("+interrupted+")");
   }
 
   // Returns true when the command should end.

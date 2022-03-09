@@ -85,17 +85,8 @@ public class Drive extends SubsystemBase {
 
     public void setSpeed(double leftPercentPower, double rightPercentPower) {
         if (Constants.DRIVE_EXISTS) {
-            if (leftPercentPower >= -Constants.JOYSTICK_DEADBAND && leftPercentPower <= Constants.JOYSTICK_DEADBAND){
-                leftMaster.set(0.0);
-            }else {
-                leftMaster.set(leftPercentPower);
-            }
-
-            if (rightPercentPower >= -Constants.JOYSTICK_DEADBAND && rightPercentPower <= Constants.JOYSTICK_DEADBAND){
-                rightMaster.set(0.0);
-            }else{
-                rightMaster.set(rightPercentPower);
-            }
+            leftMaster.set(leftPercentPower);
+            rightMaster.set(rightPercentPower);
             SmartDashboard.putNumber("Left M Current", leftMaster.getOutputCurrent());
             SmartDashboard.putNumber("Right M Current", rightMaster.getOutputCurrent());
             SmartDashboard.putNumber("Left F Current", leftFollower.getOutputCurrent());
@@ -103,7 +94,7 @@ public class Drive extends SubsystemBase {
 
             SmartDashboard.putNumber("Left rpm", leftMaster.getEncoder().getVelocity());
             SmartDashboard.putNumber("Right rpm", rightMaster.getEncoder().getVelocity());
-            }
+        }
     }
 
     public void aim(Turret turret) {

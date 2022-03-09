@@ -20,6 +20,7 @@ public class BringShooterUpToSpeed extends CommandBase {
   private Shooter shooter;
   private boolean running;
   private boolean ready;
+  private boolean finished;
   private Hopper hopper;
 
   /** Creates a new Shoot. */
@@ -28,7 +29,8 @@ public class BringShooterUpToSpeed extends CommandBase {
     hopper = hopperSubsystem;
     running = false;
     ready = false;
-    addRequirements(shooter);
+    finished = false;
+    addRequirements(shooter, hopper);
   }
 
   // Called when the command is initially scheduled.
@@ -42,16 +44,14 @@ public class BringShooterUpToSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (running) {
-      // System.out.println("BringShooterUpToSpeed.execute()");
-      shooter.turnOnPichingMachine();
-      SmartDashboard.putNumber("Shooter RPM", shooter.getRPM());
-      if (isReadyToShoot()){
-        hopper.hopperUp();
-        hopper.hopperStopperRetract();
-      }
+    // System.out.println("BringShooterUpToSpeed.execute()");
+    running = true;
+    shooter.turnOnPichingMachine();
+    SmartDashboard.putNumber("Shooter RPM", shooter.getRPM());
+    if (isReadyToShoot()){
+      hopper.hopperUp();
+      hopper.hopperStopperRetract();
     }
-      // running = true;
   }
 
   // Called once the command ends or is interrupted.
@@ -75,8 +75,13 @@ public class BringShooterUpToSpeed extends CommandBase {
     shooter.turnOffPitchingMacine();
     hopper.hopperStop();
     hopper.hopperStopperExtend();
-    running = false;
+    finish();
+  }
 
+  public void finish() {
+    running = false;
+    ready = false;
+    finished = true;
   }
 
   public boolean isRunning(){
@@ -91,6 +96,6 @@ public class BringShooterUpToSpeed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

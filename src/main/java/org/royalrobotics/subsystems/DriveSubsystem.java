@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -183,6 +184,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rightVolts the commanded right output
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
+    //SmartDashboard.putNumber("Left volts: ", leftVolts);
+    //SmartDashboard.putNumber("Right volts: ", rightVolts);
     m_leftMotors.setVoltage(leftVolts);
     m_rightMotors.setVoltage(rightVolts);
     m_drive.feed();

@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class JoystickDrive extends CommandBase {
 
-  Drive drive;
+  DriveSubsystem drive;
   OperatorConsole console;
   
   /** Creates a new JoystickDrive. */
-  public JoystickDrive(OperatorConsole operatorConsole, Drive driveSubsystem) {
+  public JoystickDrive(OperatorConsole operatorConsole, DriveSubsystem driveSubsystem) {
     super();
     // Use addRequirements() here to declare subsystem dependencies.
     drive = driveSubsystem;
@@ -37,10 +37,10 @@ public class JoystickDrive extends CommandBase {
   public void execute() {
     double leftPercent = console.getLeftY() * Constants.Speeds.driving.speed;
     double rightPercent = console.getRightY() * Constants.Speeds.driving.speed;
-    SmartDashboard.putNumber("LEFT P", leftPercent);
-    SmartDashboard.putNumber("RIGHT P", rightPercent);
-    //drive.tankDriveVolts(leftPercent * Constants.MAX_VOLTAGE, rightPercent * Constants.MAX_VOLTAGE);
-    drive.setSpeed(leftPercent, rightPercent);
+    //SmartDashboard.putNumber("LEFT P", leftPercent);
+    //SmartDashboard.putNumber("RIGHT P", rightPercent);
+    drive.tankDriveVolts(leftPercent * Constants.MAX_VOLTAGE, rightPercent * Constants.MAX_VOLTAGE);
+    //drive.setSpeed(leftPercent, rightPercent);
 
     
   }
