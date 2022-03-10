@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
     
-    private CANSparkMax shooterMotor;
+    public static CANSparkMax shooterMotor;
 
     private SparkMaxPIDController shootercontroller;
 

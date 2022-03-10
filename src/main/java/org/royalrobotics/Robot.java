@@ -96,8 +96,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    drive = new Drive();
     //driveSubsystem = new DriveSubsystem();
-    driveSubsystem = new DriveSubsystem();
     climber = new Climber();
     intake = new Intake();
     hopper = new Hopper();
@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
     // CommandScheduler.getInstance().setDefaultCommand(shooter, shootCommand);
 
 
-    CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, driveSubsystem));
+    CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, drive));
     //CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
   }
 
@@ -188,7 +188,7 @@ public class Robot extends TimedRobot {
       }
       if (!shootCommand.isRunning()) 
       {
-        //System.out.println("running");
+        //System.out.println("running");(
         CommandScheduler.getInstance().schedule(shootCommand);
       }
     }
@@ -213,19 +213,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     CommandScheduler.getInstance().run();
-        
-    //Color Sensor
-    Color detectedColor = m_colorSensor.getColor();
 
-    SmartDashboard.putNumber("Red", detectedColor.red);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);
-
-    if (detectedColor.red > detectedColor.blue && Constants.ALLIANCE == "Red") {
-      System.out.println("Red Alliance -- Red Ball");
-      if (detectedColor.blue > detectedColor.red && Constants.ALLIANCE == "Red") {
-        
-      }
-    }
   }
 }
+
 

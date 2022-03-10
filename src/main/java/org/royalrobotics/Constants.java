@@ -112,7 +112,7 @@ public class Constants {
     ///////////////////////////[[[[[[[[[[[[[LOGIC]]]]]]]]]]]]]\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     public static final boolean HOPPER_EXSISTS = true;
-    public static final boolean SHOOTER_EXSISTS = true; //true
+    public static final boolean SHOOTER_EXSISTS = true ; //true
     public static final boolean INTAKE_EXSISTS = true; //true
     public static final boolean CARGOPICKUP_EXISTS = false;
     public static final boolean CLIMBER_EXISTS = true;
