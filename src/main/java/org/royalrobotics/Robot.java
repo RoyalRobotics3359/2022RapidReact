@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 
 //import org.royalrobotics.Constants;
 import org.royalrobotics.subsystems.Climber;
+import org.royalrobotics.subsystems.ColorSensor;
 import org.royalrobotics.subsystems.Drive;
 import org.royalrobotics.subsystems.DriveSubsystem;
 import org.royalrobotics.subsystems.Hopper;
@@ -77,6 +78,7 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private Hopper hopper;
   private Turret turret;
+  private ColorSensor colorSensor;
   private RobotContainer container;
 
 
@@ -181,7 +183,11 @@ public class Robot extends TimedRobot {
 
     //System.out.println("trigger: "+console.getShoot() +", "+shootCommand.isRunning());
 
-    if (console.getShoot() > 0.67)
+    if (ColorSensor.match.color == ColorSensor.blue) {
+      if (Constants.ALLIANCE.equals("red") == true) {
+        Shooter.shooterMotor.set(0.4);
+      } else if (Constants.ALLIANCE.equals("blue") == true) {
+        if (console.getShoot() > 0.67)
     {
       if (shootCommand == null) {
         shootCommand = new BringShooterUpToSpeed(shooter, hopper);
@@ -199,6 +205,52 @@ public class Robot extends TimedRobot {
         shootCommand = null;
       }
     }
+      }
+    }
+    
+    if (ColorSensor.match.color == ColorSensor.red) {
+      if (Constants.ALLIANCE.equals("blue") == true) {
+        Shooter.shooterMotor.set(0.4);
+      } else if (Constants.ALLIANCE.equals("red") == true) {
+        if (console.getShoot() > 0.67)
+    {
+      if (shootCommand == null) {
+        shootCommand = new BringShooterUpToSpeed(shooter, hopper);
+      }
+      if (!shootCommand.isRunning()) 
+      {
+        //System.out.println("running");(
+        CommandScheduler.getInstance().schedule(shootCommand);
+      }
+    }
+    else
+    {
+      if (shootCommand != null) {
+        shootCommand.finish();
+        shootCommand = null;
+      }
+    }
+      }
+    }
+
+    // if (console.getShoot() > 0.67)
+    // {
+    //   if (shootCommand == null) {
+    //     shootCommand = new BringShooterUpToSpeed(shooter, hopper);
+    //   }
+    //   if (!shootCommand.isRunning()) 
+    //   {
+    //     //System.out.println("running");(
+    //     CommandScheduler.getInstance().schedule(shootCommand);
+    //   }
+    // }
+    // else
+    // {
+    //   if (shootCommand != null) {
+    //     shootCommand.finish();
+    //     shootCommand = null;
+    //   }
+    // }
 
     CommandScheduler.getInstance().run();
   }

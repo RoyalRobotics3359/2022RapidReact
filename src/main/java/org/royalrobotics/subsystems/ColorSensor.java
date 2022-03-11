@@ -21,13 +21,14 @@ public class ColorSensor extends SubsystemBase {
   /** Creates a new ColorSensor. */
 
   // Creating new I2C port
-  private final I2C.Port i2cPort;
-  private final ColorSensorV3 m_colorSensor;
-  private final ColorMatch m_colorMatcher;
+  private I2C.Port i2cPort;
+  private ColorSensorV3 m_colorSensor;
+  private ColorMatch m_colorMatcher;
+  public static ColorMatchResult match;
 
-  private final Color blue, red;
+  public static Color blue, red;
 
-  private final String color;
+  private String color;
 
 
   public ColorSensor() {
@@ -57,29 +58,40 @@ public class ColorSensor extends SubsystemBase {
     /**
      * Run the color match algorithm on our detected color
      */
-    ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+    match = m_colorMatcher.matchClosestColor(detectedColor);
 
-    switch (color) {
-      case "Blue":
-        match.color = blue;
-        break;
-      case "Red":
-        match.color = red;
-        break;
-    }
+    // switch (color) {
+    //   case "Blue":
+    //     match.color = blue;
+    //     if (Constants.ALLIANCE == "red") {
+    //       Shooter.shooterMotor.set(0.4);
+    //     }
+    //     break;
+    //   case "Red":
+    //     match.color = red;
+    //     if (Constants.ALLIANCE == "blue") {
+    //       Shooter.shooterMotor.set(0.4);
+    //     }
+    //     break;
+        
+    // }
 
+
+    // if (match.color == blue) {
+    //   if (Constants.ALLIANCE.equals("red") == true) {
+    //     Shooter.shooterMotor.set(0.4);
+    //   }
+    // } else if (match.color == red) {
+    //   if (Constants.ALLIANCE.equals("blue") == true) {
+    //     Shooter.shooterMotor.set(0.4);
+    //   }
+    // }
 
     // SmartDashboard give out (r,g,b) values of detected color
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
 
-    }
-
-    public Color getBallColor() {
-      
-    }
-
-
   }
+
 }
