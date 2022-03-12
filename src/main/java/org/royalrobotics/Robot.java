@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -56,7 +57,7 @@ import com.revrobotics.ColorSensorV3;
 
 import org.royalrobotics.commands.AimShooter;
 //import org.royalrobotics.commands.BringShooterUpToSpeed;
-import org.royalrobotics.commands.BringShooterUpToSpeed;
+import org.royalrobotics.commands.ManualShoot;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -82,15 +83,11 @@ public class Robot extends TimedRobot {
   private RobotContainer container;
 
 
-  private BringShooterUpToSpeed shootCommand;
+  private ManualShoot manualShootCommand;
+  private ScoreHighGoal automatedShootCommand;
   private IntakeIn intakeIn;
 
   private UsbCamera camera;
-
-  
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
-
-  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -108,6 +105,7 @@ public class Robot extends TimedRobot {
     compressor = new Compressor(PneumaticsModuleType.CTREPCM);
     compressor.enableDigital();
     console = new OperatorConsole();
+    colorSensor = new ColorSensor();
     // intakeIn = new IntakeIn(intake, hopper, console.getIntakeInButton());
     container = new RobotContainer();
    // console.getShootButton().whenPressed(new ScoreHighGoal(shooter, hopper));
@@ -179,78 +177,41 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    //SmartDashboard.putNumber("shooter value", console.getShoot());
-
-    //System.out.println("trigger: "+console.getShoot() +", "+shootCommand.isRunning());
-
-    if (ColorSensor.match.color == ColorSensor.blue) {
-      if (Constants.ALLIANCE.equals("red") == true) {
-        Shooter.shooterMotor.set(0.4);
-      } else if (Constants.ALLIANCE.equals("blue") == true) {
-        if (console.getShoot() > 0.67)
+    // used for manual shooting
+    if (console.getManualTrigger() > 0.67)
     {
-      if (shootCommand == null) {
-        shootCommand = new BringShooterUpToSpeed(shooter, hopper);
+      if (manualShootCommand == null) {
+        manualShootCommand = new ManualShoot(shooter, hopper);
       }
-      if (!shootCommand.isRunning()) 
+      if (!manualShootCommand.isRunning()) 
       {
         //System.out.println("running");(
-        CommandScheduler.getInstance().schedule(shootCommand);
+        CommandScheduler.getInstance().schedule(manualShootCommand);
       }
     }
     else
     {
-      if (shootCommand != null) {
-        shootCommand.finish();
-        shootCommand = null;
-      }
-    }
+      if (manualShootCommand != null) {
+        manualShootCommand.finish();
+        manualShootCommand = null;
       }
     }
     
-    if (ColorSensor.match.color == ColorSensor.red) {
-      if (Constants.ALLIANCE.equals("blue") == true) {
-        Shooter.shooterMotor.set(0.4);
-      } else if (Constants.ALLIANCE.equals("red") == true) {
-        if (console.getShoot() > 0.67)
-    {
-      if (shootCommand == null) {
-        shootCommand = new BringShooterUpToSpeed(shooter, hopper);
-      }
-      if (!shootCommand.isRunning()) 
-      {
-        //System.out.println("running");(
-        CommandScheduler.getInstance().schedule(shootCommand);
+    // Used for automated Shooting
+    if (manualShootCommand == null && console.getAutomatedTrigger() > 0.67){
+        if (automatedShootCommand == null){
+          automatedShootCommand = new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, 5.0);
+        } 
+        if (!automatedShootCommand.isRunning()){
+          CommandScheduler.getInstance().schedule(automatedShootCommand);
+        }
+    }
+    else{
+      if (automatedShootCommand != null){
+        automatedShootCommand.finish();
+        automatedShootCommand = null;
       }
     }
-    else
-    {
-      if (shootCommand != null) {
-        shootCommand.finish();
-        shootCommand = null;
-      }
-    }
-      }
-    }
-
-    // if (console.getShoot() > 0.67)
-    // {
-    //   if (shootCommand == null) {
-    //     shootCommand = new BringShooterUpToSpeed(shooter, hopper);
-    //   }
-    //   if (!shootCommand.isRunning()) 
-    //   {
-    //     //System.out.println("running");(
-    //     CommandScheduler.getInstance().schedule(shootCommand);
-    //   }
-    // }
-    // else
-    // {
-    //   if (shootCommand != null) {
-    //     shootCommand.finish();
-    //     shootCommand = null;
-    //   }
-    // }
 
     CommandScheduler.getInstance().run();
   }
@@ -265,6 +226,56 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     CommandScheduler.getInstance().run();
+
+    if (ColorSensor.match.color == ColorSensor.blue) {
+      if (Constants.ALLIANCE.equals("red") == true) {
+        Shooter.shooterMotor.set(0.4);
+      } else if (Constants.ALLIANCE.equals("blue") == true) {
+        if (console.getManualTrigger() > 0.67)
+    {
+      if (manualShootCommand == null) {
+        manualShootCommand = new ManualShoot(shooter, hopper);
+      }
+      if (!manualShootCommand.isRunning()) 
+      {
+        //System.out.println("running");(
+        CommandScheduler.getInstance().schedule(manualShootCommand);
+      }
+    }
+    else
+    {
+      if (manualShootCommand != null) {
+        manualShootCommand.finish();
+        manualShootCommand = null;
+      }
+    }
+      }
+    }
+    
+    if (ColorSensor.match.color == ColorSensor.red) {
+      if (Constants.ALLIANCE.equals("blue") == true) {
+        Shooter.shooterMotor.set(0.4);
+      } else if (Constants.ALLIANCE.equals("red") == true) {
+        if (console.getManualTrigger() > 0.67)
+    {
+      if (manualShootCommand == null) {
+        manualShootCommand = new ManualShoot(shooter, hopper);
+      }
+      if (!manualShootCommand.isRunning()) 
+      {
+        //System.out.println("running");(
+        CommandScheduler.getInstance().schedule(manualShootCommand);
+      }
+    }
+    else
+    {
+      if (manualShootCommand != null) {
+        manualShootCommand.finish();
+        manualShootCommand = null;
+      }
+    }
+      }
+    }
 
   }
 }

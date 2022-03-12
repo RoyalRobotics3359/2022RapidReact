@@ -114,17 +114,6 @@ public class Drive extends SubsystemBase {
 
     }
 
-    /*public void drive10Feet(){
-        LeftMasterEncoder = leftMaster.getEncoder();
-
-        LeftMasterEncoder.getPosition();
-
-
-
-
-
-    }*/
-
     public void stop() {
         if (Constants.DRIVE_EXISTS) {
             leftMaster.set(0.0);

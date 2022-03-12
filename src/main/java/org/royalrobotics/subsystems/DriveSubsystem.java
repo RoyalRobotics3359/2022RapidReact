@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
@@ -57,12 +58,6 @@ public class DriveSubsystem extends SubsystemBase {
   private static final double RIGHT_KI = 0.0;
   private static final double RIGHT_KD = 0.0;
 
-
-
-
-
-
-
   // The gyro sensor
   private final Gyro m_gyro = new ADXRS450_Gyro();
 
@@ -80,15 +75,17 @@ public class DriveSubsystem extends SubsystemBase {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
 
-    leftMaster = new CANSparkMax(CanId.frontLeft.id, MotorType.kBrushless);
-    leftFollower = new CANSparkMax(CanId.rearLeft.id, MotorType.kBrushless);
-    rightMaster = new CANSparkMax(CanId.frontRight.id, MotorType.kBrushless);
-    rightFollower = new CANSparkMax(CanId.rearRight.id, MotorType.kBrushless);
+    leftMaster = createMotor(CanId.frontLeft);
+    leftFollower = createMotor(CanId.rearLeft);
+    rightMaster = createMotor(CanId.frontRight);
+    rightFollower = createMotor(CanId.rearRight);
+
+    leftFollower.follow(leftMaster);
+    rightFollower.follow(rightMaster);
 
     m_leftMotors = new MotorControllerGroup(leftMaster, leftFollower);
     m_rightMotors = new MotorControllerGroup(rightMaster, rightFollower);
 
-    m_rightMotors.setInverted(true);
 
     m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
@@ -116,15 +113,24 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        m_gyro.getRotation2d(), getLeftDistanceTraveled(), getRightDistanceTraveled());
-
+        m_gyro.getRotation2d(), getLeftSpeed(), getRightSpeed());
   }
 
-  public double getLeftDistanceTraveled() {
+  /**
+   * Converts encoder RPM to meters per second of wheel travel of the Left side
+   * 
+   * @return double meters per second
+   */
+  public double getLeftSpeed() {
     return m_leftEncoder.getVelocity() / Constants.GEAR_RATIO * 2.0 * Math.PI * Units.inchesToMeters(Constants.WHEEL_RADIUS) / 60.0;
   }
 
-  public double getRightDistanceTraveled() {
+  /**
+   * Converts encoder RPM to meters per second of wheel travel of the Right side
+   * 
+   * @return double meters per second
+   */
+  public double getRightSpeed() {
     return m_rightEncoder.getVelocity() / Constants.GEAR_RATIO * 2.0 * Math.PI * Units.inchesToMeters(Constants.WHEEL_RADIUS) / 60.0;
   }
 
@@ -150,7 +156,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(getLeftDistanceTraveled(), getRightDistanceTraveled());
+    return new DifferentialDriveWheelSpeeds(getLeftSpeed(), getRightSpeed());
   }
 
   public DifferentialDriveKinematics getKinematics(){
@@ -186,10 +192,26 @@ public class DriveSubsystem extends SubsystemBase {
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     //SmartDashboard.putNumber("Left volts: ", leftVolts);
     //SmartDashboard.putNumber("Right volts: ", rightVolts);
-    m_leftMotors.setVoltage(leftVolts);
-    m_rightMotors.setVoltage(rightVolts);
+    leftMaster.setVoltage(leftVolts);
+    rightMaster.setVoltage(rightVolts);
     m_drive.feed();
   }
+
+  private CANSparkMax createMotor(Constants.CanId iD){
+    CANSparkMax motor = new CANSparkMax(iD.id, MotorType.kBrushless);
+    
+    motor.restoreFactoryDefaults();
+
+    // We need to invert one side of the drivetrain so that positive voltages
+    // result in both sides moving forward. Depending on how your robot's
+    // gearbox is constructed, you might have to invert the left side instead.
+    motor.setInverted(iD.reversed);
+
+    motor.setIdleMode(IdleMode.kBrake);
+
+    return motor;
+  }
+
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
@@ -203,7 +225,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (getLeftDistanceTraveled() + getRightDistanceTraveled()) / 2.0;
+    return (getLeftSpeed() + getRightSpeed()) / 2.0;
   }
 
   /**

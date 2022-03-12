@@ -120,7 +120,7 @@ public class Constants {
     public static final boolean TURRET_EXISTS = false;
 
     //////////[ALLIANCE]\\\\\\\\\
-    public static final String ALLIANCE = "red";
+    public static final String ALLIANCE = "red"; // set to red or blue
 
 
 

@@ -87,7 +87,11 @@ public class OperatorConsole {
         return controller.getRawAxis(4);
     }
 
-    public double getShoot() {
+    public double getManualTrigger() {
         return controller.getRawAxis(XboxController.Axis.kLeftTrigger.value);
+    }
+
+    public double getAutomatedTrigger(){
+        return controller.getRawAxis(XboxController.Axis.kRightTrigger.value);
     }
 }

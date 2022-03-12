@@ -7,6 +7,7 @@ package org.royalrobotics;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 
 import org.royalrobotics.subsystems.Drive;
 import org.royalrobotics.subsystems.DriveSubsystem;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -33,8 +35,7 @@ public class RobotContainer {
     private DriveSubsystem drive;
     private RamseteController ramseteController;
 
-    private Trajectory trajectory;
-    private static final String trajectoryJSON = "paths/SimpleCurve.wpilib";
+    //private static final String trajectoryJSON = "paths/SimpleCurve.wpilib";
 
 
     public RobotContainer(){
@@ -44,25 +45,59 @@ public class RobotContainer {
 
   
 
-    public Command getAutonomousCommand(){
-        TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2));
+    public Command getAutonomousCommandFromFile(String fileName){
+        TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2)); 
         config.setKinematics(drive.getKinematics());
+
+        Trajectory trajectory;
 
         /**
          * This is the way you can import the JSON file from the PathWeaver tool to create custom paths
          */
-        // try{
-        //     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-        //     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-        //   } catch (IOException ex){
-        //     DriverStation.reportError("Unable to open Trajectory: " + trajectoryJSON, ex.getStackTrace());
-        //   }
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("Paths/" + fileName);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+            return createCommand(trajectory);
+        } catch (IOException ex){
+            DriverStation.reportError("Unable to open Trajectory: " + fileName, ex.getStackTrace());
+        }
+        return null;
+    }
+
+    public Command DriveStraightCommand(double distanceInMeters){  
+        TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2)); 
+        config.setKinematics(drive.getKinematics());
 
         // Simpler way of making a path
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            Arrays.asList(new Pose2d(), new Pose2d(1.0, 0, new Rotation2d())) // moves 1 meter forward using config
-        , config);
+            Arrays.asList(new Pose2d(), new Pose2d(distanceInMeters, 0, new Rotation2d())), config);
 
+        return createCommand(trajectory);
+    }
+
+
+    public Command SCurveCommand(){  
+        TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2)); 
+        config.setKinematics(drive.getKinematics());
+
+        // Simpler way of making a path
+        Trajectory trajectory =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            new Pose2d(0, 0, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(3, 0, new Rotation2d(0)),
+            // Pass config
+            config);
+
+        return createCommand(trajectory);
+    }
+
+
+    private Command createCommand(Trajectory trajectory)
+    {
         // BOOM!  Bob's your unkle
         RamseteCommand command = new RamseteCommand(
             trajectory,

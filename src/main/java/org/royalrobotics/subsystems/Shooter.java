@@ -3,6 +3,7 @@ package org.royalrobotics.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -77,6 +78,7 @@ public class Shooter extends SubsystemBase {
 
     public void turnOnPichingMachine() {
         if (Constants.SHOOTER_EXSISTS){
+            //shooterMotor.getPIDController().setReference(5000, ControlType.kVelocity);
             shooterMotor.set(Constants.Speeds.shoot.speed);
         }
     }
