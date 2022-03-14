@@ -11,25 +11,29 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class OperatorConsole {
 
     private XboxController controller;
-    private JoystickButton extendClimber, retractClimber;
+    private JoystickButton extendClimber, retractClimber, reverseClimberMotor;
     private JoystickButton intakeIn, intakeOut;
     private JoystickButton turretAim;
     private JoystickButton intakeArmUp;
-    private JoystickButton climberMotorUpwards, climberMotorDownwards;
+    //private JoystickButton climberMotorUpwards, climberMotorDownwards;
     private JoystickButton shooterButton;
 
     public OperatorConsole() {
         controller = new XboxController(Constants.CONTROLLER_ID);
         extendClimber = new JoystickButton(controller, XboxController.Button.kX.value);
         retractClimber = new JoystickButton(controller, XboxController.Button.kY.value);
+        reverseClimberMotor = new JoystickButton(controller, XboxController.Button.kStart.value);
         intakeIn = new JoystickButton(controller, XboxController.Button.kLeftBumper.value);
         intakeOut = new JoystickButton(controller, XboxController.Button.kRightBumper.value);
         intakeArmUp = new JoystickButton(controller, XboxController.Button.kB.value);
         turretAim = new JoystickButton(controller, XboxController.Button.kA.value);
-        climberMotorUpwards = new JoystickButton(controller, XboxController.Button.kStart.value);
-        climberMotorDownwards = new JoystickButton(controller, XboxController.Button.kBack.value);
+        //climberMotorUpwards = new JoystickButton(controller, XboxController.Button.kStart.value);
+        //climberMotorDownwards = new JoystickButton(controller, XboxController.Button.kBack.value);
         shooterButton = new JoystickButton(controller, XboxController.Button.kRightStick.value);
+        //turretLeft = new JoystickButton(controller, 12);
+        //turretRight = new JoystickButton(controller, 14);
     }
+
 
     public JoystickButton getExtendClimberButton() {
         return extendClimber;
@@ -55,14 +59,15 @@ public class OperatorConsole {
         return intakeArmUp;
     }
 
-    public JoystickButton getClimberMotorUpwards(){
-        return climberMotorUpwards;
+    public JoystickButton getReverseClimbMotor(){
+        return reverseClimberMotor;
     }
 
-    public JoystickButton getClimberMotorDownwards(){
-        return climberMotorDownwards;
+    public int getDPadAngle(){
+        int POV = controller.getPOV();
+        return POV;
     }
-
+    
     public double getLeftY() {
         double y = controller.getRawAxis(1) * -1.0;
         if (y >= -Constants.JOYSTICK_DEADBAND && y <= Constants.JOYSTICK_DEADBAND) {

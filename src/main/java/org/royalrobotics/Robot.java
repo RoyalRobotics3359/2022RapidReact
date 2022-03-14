@@ -39,6 +39,7 @@ import org.royalrobotics.commands.IntakeIn;
 import org.royalrobotics.commands.IntakeOut;
 import org.royalrobotics.commands.JoystickDrive;
 import org.royalrobotics.commands.RetractClimber;
+import org.royalrobotics.commands.ReverseClimber;
 import org.royalrobotics.commands.ScoreHighGoal;
 import org.royalrobotics.commands.TimedDriveForward;
 
@@ -95,8 +96,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    drive = new Drive();
-    //driveSubsystem = new DriveSubsystem();
+    //drive = new Drive();
+    driveSubsystem = new DriveSubsystem();
     climber = new Climber();
     intake = new Intake();
     hopper = new Hopper();
@@ -134,6 +135,8 @@ public class Robot extends TimedRobot {
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
     console.getRetractClimber().whenHeld(new RetractClimber(climber));
 
+    console.getReverseClimbMotor().whenHeld(new ReverseClimber(climber));
+    
     // INTAKE / HOPPER
     console.getIntakeInButton().whenHeld(new IntakeIn(intake, hopper));
     //console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
@@ -146,7 +149,7 @@ public class Robot extends TimedRobot {
     // CommandScheduler.getInstance().setDefaultCommand(shooter, shootCommand);
 
 
-    CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, drive));
+    CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, driveSubsystem));
     //CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
   }
 
@@ -212,9 +215,12 @@ public class Robot extends TimedRobot {
         automatedShootCommand = null;
       }
     }
-
     CommandScheduler.getInstance().run();
+
+    System.out.println(console.getDPadAngle());
   }
+
+  
 
   /** This function is called once each time the robot enters test mode. */
   @Override

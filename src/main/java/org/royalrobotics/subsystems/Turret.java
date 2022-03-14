@@ -6,6 +6,7 @@ package org.royalrobotics.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import org.royalrobotics.Constants;
@@ -54,6 +55,7 @@ public class Turret extends SubsystemBase {
       table = NetworkTableInstance.getDefault().getTable("limelight");
       turretMotor = new CANSparkMax(CanId.turretMotor.id, MotorType.kBrushless);
       turretController = turretMotor.getPIDController();
+      turretMotor.setIdleMode(IdleMode.kBrake);
       turretController.setP(KP);
       turretController.setI(KI);
       turretController.setD(KD);
@@ -132,6 +134,18 @@ public class Turret extends SubsystemBase {
     return distanceFromLimelightToGoalInches;
     
 }
+
+  public void rotateTurretLeft(){
+    if (Constants.TURRET_EXISTS){
+      turretMotor.set(.3);
+    }
+  }
+
+  public void rotateTurretRight(){
+    if (Constants.TURRET_EXISTS){
+      turretMotor.set(-.3);
+    }
+  }
 
   public void setTurretSpeed(double speed){
     if (Constants.TURRET_EXISTS){

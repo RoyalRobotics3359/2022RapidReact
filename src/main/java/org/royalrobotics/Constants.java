@@ -117,7 +117,7 @@ public class Constants {
     public static final boolean CARGOPICKUP_EXISTS = false;
     public static final boolean CLIMBER_EXISTS = true;
     public static final boolean DRIVE_EXISTS = true; //true
-    public static final boolean TURRET_EXISTS = false;
+    public static final boolean TURRET_EXISTS = true;
 
     //////////[ALLIANCE]\\\\\\\\\
     public static final String ALLIANCE = "red"; // set to red or blue

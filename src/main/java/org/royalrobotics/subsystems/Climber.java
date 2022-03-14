@@ -50,6 +50,12 @@ public class Climber extends SubsystemBase {
     }
   }
 
+  public void reverseMotor(){
+    if (Constants.CLIMBER_EXISTS){
+      climbMotor.set(-1 * Speeds.climber.speed);
+    }
+  }
+
   public void startMotor() {
     if (Constants.CLIMBER_EXISTS){
       climbMotor.set(Speeds.climber.speed);
