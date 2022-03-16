@@ -22,14 +22,16 @@ public class Shoot extends CommandBase {
   public Shoot(Shooter shooterSubsystem, Hopper hopperSubsystem, double delay) {
     shooter = shooterSubsystem;
     hopper = hopperSubsystem;
+    this.delay = delay;
     addRequirements(shooter, hopper);
     timer = new Timer();
+    timer.start();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.start();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,11 +48,13 @@ public class Shoot extends CommandBase {
     shooter.turnOffPitchingMacine();
     hopper.hopperStop();
     hopper.hopperStopperExtend();
+    timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println(timer.get());
     if (timer.get() >= delay){
       return true;
     }

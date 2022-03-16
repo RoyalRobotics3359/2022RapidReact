@@ -35,6 +35,7 @@ public class Turret extends SubsystemBase {
   private NetworkTableEntry targetOffset_V; //Changed from targetOffsetAngle_Vertical
   private NetworkTableEntry targetArea;
   private NetworkTableEntry targetSkew;
+  private NetworkTableEntry targetDetected;
 
   private CANSparkMax turretMotor;
   private SparkMaxPIDController turretController;
@@ -62,9 +63,9 @@ public class Turret extends SubsystemBase {
       turretController.setReference(0.0, CANSparkMax.ControlType.kPosition);
       turretGearRatio = 1;
       ticksPerRotation = 42;
-      //vFieldOfView = Math.toRadians(49.7/2); // "/2" is for formula
-      //hFieldOfView = 59.6;
-      //vPh = 2.0*Math.tan(vFieldOfView);
+      vFieldOfView = Math.toRadians(49.7/2); // "/2" is for formula
+      hFieldOfView = 59.6;
+      vPh = 2.0*Math.tan(vFieldOfView);
 
 
       //angle limelight is tilted backwards from vertical
@@ -93,28 +94,34 @@ public class Turret extends SubsystemBase {
 
   public boolean aim() {
 
-    targetOffset_H = table.getEntry("tx");
-    targetOffset_V = table.getEntry("ty");
-    targetArea = table.getEntry("ta");
-    targetSkew = table.getEntry("ts");
+    
 
-    double tx =  targetOffset_H.getDouble(0.0);
-
-    if (Constants.TURRET_EXISTS) {
-      //SmartDashboard.putNumber("Target Angle (Horizontal)", targetOffsetAngle_Horizontal.getDouble(0.0));
-      SmartDashboard.putNumber("Target Angle (Horizontal)", tx);
-
-      SmartDashboard.putNumber("Target Angle (Vertical)", targetOffset_V.getDouble(0.0));
-
-      angleOfTurret = (turretMotor.getEncoder().getPosition()) * (turretGearRatio) * (360/ticksPerRotation);
+    if (Constants.TURRET_EXISTS ) {
+      targetDetected = table.getEntry("tv");
+      if (targetDetected.getDouble(0.0) == 1){
+        targetOffset_H = table.getEntry("tx");
+        targetOffset_V = table.getEntry("ty");
+        targetArea = table.getEntry("ta");
+        targetSkew = table.getEntry("ts");
       
-      targetAngle = vPh/2 * table.getEntry("ty").getDouble(0.0);
+        
 
-      //double turretAdjust = turretController.calculate(tx, 0.0);
+        double tx =  targetOffset_H.getDouble(0.0);
+        //SmartDashboard.putNumber("Target Angle (Horizontal)", targetOffsetAngle_Horizontal.getDouble(0.0));
+        SmartDashboard.putNumber("Target Angle (Horizontal)", tx);
 
-      //SmartDashboard.putNumber("Turret Adjust", turretAdjust);
-      
-      //turretMotor.set(turretAdjust);
+        SmartDashboard.putNumber("Target Angle (Vertical)", targetOffset_V.getDouble(0.0));
+
+        angleOfTurret = (turretMotor.getEncoder().getPosition()) * (turretGearRatio) * (360/ticksPerRotation);
+        
+        targetAngle = vPh/2 * table.getEntry("ty").getDouble(0.0);
+
+        //double turretAdjust = turretController.calculate(tx, 0.0);
+
+        //SmartDashboard.putNumber("Turret Adjust", turretAdjust);
+        
+        //turretMotor.set(turretAdjust);
+      }
     } 
     return false;
   }

@@ -50,11 +50,13 @@ public class DriveSubsystem extends SubsystemBase {
   private PIDController leftPIDController;
   private PIDController rightPIDController;
 
-  private static final double LEFT_KP = 0.0;
+  //private static final double LEFT_KP = 3.5151;
+  private static final double LEFT_KP = 2.5;
   private static final double LEFT_KI = 0.0;
   private static final double LEFT_KD = 0.0;
 
-  private static final double RIGHT_KP = 0.0;
+  //private static final double RIGHT_KP = 3.5151;
+  private static final double RIGHT_KP = 2.5;
   private static final double RIGHT_KI = 0.0;
   private static final double RIGHT_KD = 0.0;
 
@@ -98,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
      * only accepts PIDController not SparkMaxPIDController
      */
     leftPIDController = new PIDController(LEFT_KP, LEFT_KI, LEFT_KD);
-    leftPIDController = new PIDController(RIGHT_KP, RIGHT_KI, RIGHT_KD);
+    rightPIDController = new PIDController(RIGHT_KP, RIGHT_KI, RIGHT_KD);
 
 
 

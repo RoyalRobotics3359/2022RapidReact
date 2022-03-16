@@ -40,6 +40,7 @@ public class ScoreHighGoal extends SequentialCommandGroup {
     );
     finished = false;
     running = false;
+    System.out.println("scorehighgoal.scorehighgoal");
   }
 
   @Override
@@ -57,10 +58,18 @@ public class ScoreHighGoal extends SequentialCommandGroup {
   }
 
   @Override
+  public void end(boolean interrupted) {
+    shooter.turnOffPitchingMacine();
+    hopper.hopperStop();
+    hopper.hopperStopperExtend();
+    running = false;
+  }
+
+  @Override
   public boolean isFinished() {
-    if (!finished){
-      return super.isFinished();
+    if (finished){
+      return true;
     }
-    return true;
+    return super.isFinished();
   }
 }

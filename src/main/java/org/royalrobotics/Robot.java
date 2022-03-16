@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 //import edu.wpi.first.wpilibj.AnalogGyro;
@@ -120,7 +121,7 @@ public class Robot extends TimedRobot {
     // Get a CvSink. This will capture Mats from the camera
     CvSink cvSink = CameraServer.getVideo();
     // Setup a CvSource. This will send images back to the Dashboard
-    CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 720);
+    CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
     // set FPS
     camera.setFPS(24);
 
@@ -139,7 +140,7 @@ public class Robot extends TimedRobot {
     
     // INTAKE / HOPPER
     console.getIntakeInButton().whenHeld(new IntakeIn(intake, hopper));
-    //console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
+    console.getIntakeOutButton().whileHeld(new IntakeOut(intake, hopper));
     //console.getIntakeArmUpButton().whenPressed(new IntakeArmUp(intake));
 
     //console.getTurretAimButton().whileHeld(new AimShooter(turret, drive));
@@ -158,16 +159,19 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_timer.reset();
     m_timer.start();
+    driveSubsystem.resetOdometry(new Pose2d());
     //CommandScheduler.getInstance().schedule(new TimedDriveForward(driveSubsystem, 3, .3));
 
-    //CommandScheduler.getInstance().schedule(new TimedDriveForward(drive, 20, .2));
+    //CommandScheduler.getInstance().schedule(RobotContainer.DriveStraightCommand(driveSubsystem, 2.0));
+    CommandScheduler.getInstance().schedule(RobotContainer.SCurveCommand(driveSubsystem));
+
     //container.getAutonomousCommand().schedule();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
 
   }
 
@@ -203,13 +207,13 @@ public class Robot extends TimedRobot {
     // Used for automated Shooting
     if (manualShootCommand == null && console.getAutomatedTrigger() > 0.67){
         if (automatedShootCommand == null){
-          automatedShootCommand = new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, 5.0);
+          automatedShootCommand = new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, 3.0);
         } 
         if (!automatedShootCommand.isRunning()){
           CommandScheduler.getInstance().schedule(automatedShootCommand);
         }
     }
-    else{
+    else if (manualShootCommand == null && console.getAutomatedTrigger() <= 0.67){
       if (automatedShootCommand != null){
         automatedShootCommand.finish();
         automatedShootCommand = null;
@@ -217,7 +221,17 @@ public class Robot extends TimedRobot {
     }
     CommandScheduler.getInstance().run();
 
-    System.out.println(console.getDPadAngle());
+
+    int dPadAngle = console.getDPadAngle();
+    if (dPadAngle == 90){
+      turret.rotateTurretRight();
+    } else if (dPadAngle == 270){
+      turret.rotateTurretLeft();
+    } else{
+      turret.setTurretStop();
+    }
+    //SmartDashboard.putNumber("Distance From Target: ", turret.getDistanceFromTarget());
+    //SmartDashboard.putNumber("Horizantal Error", turret.getHorizantalAngle());
   }
 
   

@@ -31,21 +31,17 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 /** Add your docs here. */
 public class RobotContainer {
 
-    private SimpleMotorFeedforward feedForward;
     private DriveSubsystem drive;
-    private RamseteController ramseteController;
 
     //private static final String trajectoryJSON = "paths/SimpleCurve.wpilib";
 
 
     public RobotContainer(){
-        ramseteController = new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta); //recommended values
-        feedForward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter);
     }
 
   
 
-    public Command getAutonomousCommandFromFile(String fileName){
+    public static Command getAutonomousCommandFromFile(DriveSubsystem drive, String fileName){
         TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2)); 
         config.setKinematics(drive.getKinematics());
 
@@ -57,14 +53,14 @@ public class RobotContainer {
         try {
             Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("Paths/" + fileName);
             trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-            return createCommand(trajectory);
+            return createCommand(drive, trajectory);
         } catch (IOException ex){
             DriverStation.reportError("Unable to open Trajectory: " + fileName, ex.getStackTrace());
         }
         return null;
     }
 
-    public Command DriveStraightCommand(double distanceInMeters){  
+    public static Command DriveStraightCommand(DriveSubsystem drive, double distanceInMeters){  
         TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2)); 
         config.setKinematics(drive.getKinematics());
 
@@ -72,11 +68,11 @@ public class RobotContainer {
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             Arrays.asList(new Pose2d(), new Pose2d(distanceInMeters, 0, new Rotation2d())), config);
 
-        return createCommand(trajectory);
+        return createCommand(drive, trajectory);
     }
 
 
-    public Command SCurveCommand(){  
+    public static Command SCurveCommand(DriveSubsystem drive){  
         TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(2), Units.feetToMeters(2)); 
         config.setKinematics(drive.getKinematics());
 
@@ -92,12 +88,16 @@ public class RobotContainer {
             // Pass config
             config);
 
-        return createCommand(trajectory);
+        return createCommand(drive, trajectory);
     }
 
 
-    private Command createCommand(Trajectory trajectory)
+    private static Command createCommand(DriveSubsystem drive, Trajectory trajectory)
     {
+
+        RamseteController ramseteController = new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta); //recommended values
+        SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(Constants.ksVolts, Constants.kvVoltSecondsPerMeter);
+
         // BOOM!  Bob's your unkle
         RamseteCommand command = new RamseteCommand(
             trajectory,

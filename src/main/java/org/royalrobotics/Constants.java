@@ -19,7 +19,7 @@ public class Constants {
         rearLeft(4, false),  
         rearRight(1, true),
         climber(6, true),     
-        shooter(8, true),   
+        shooter(8, false),   
         // motor controllers on 20 amp breaker
         intakeArm(7, false),
         hopperMotor(9, false),
@@ -87,12 +87,12 @@ public class Constants {
     // ROBOT PROFILE CONSTANTS\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
     // values for your robot.
-    public static final double ksVolts = 0.17674;
-    public static final double kvVoltSecondsPerMeter = 3.4213;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.4197;
+    public static final double ksVolts = 0.19123;
+    public static final double kvVoltSecondsPerMeter = 2.8552;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.37485;
 
     // P value for drive
-    public static final double kPDriveVel = 4.3267;
+    public static final double kPDriveVel = 3.5151;
 
     public static final double kTrackwidthMeters = 0.6096;
     public static final DifferentialDriveKinematics kDriveKinematics =
@@ -105,7 +105,9 @@ public class Constants {
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
 
-    public static final double GEAR_RATIO = 10.71;
+    //public static final double GEAR_RATIO = 10.71;
+    public static final double GEAR_RATIO = 6.60;
+
 
     public static final double WHEEL_RADIUS = 3.0;
 
