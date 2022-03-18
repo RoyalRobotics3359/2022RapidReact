@@ -13,10 +13,10 @@ public class TimedDriveForward extends CommandBase {
   
     private DriveSubsystem drive;
     Timer timer;
-    long seconds;
+    double seconds;
     double percent;
 
-  public TimedDriveForward(DriveSubsystem driveSubsystem, long seconds, double percentPower) {
+  public TimedDriveForward(DriveSubsystem driveSubsystem, double seconds, double percentPower) {
     timer = new Timer();
     drive = driveSubsystem;
     percent = percentPower;

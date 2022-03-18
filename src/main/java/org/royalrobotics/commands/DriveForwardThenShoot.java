@@ -23,7 +23,7 @@ public class DriveForwardThenShoot extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       //RobotContainer.DriveStraightCommand(driveSubsystem, 1),
-      new TimedDriveForward(driveSubsystem, 1, -0.25),
+      new TimedDriveForward(driveSubsystem, 2, -0.25),
       new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, delay, false),
       new TimedDriveForward(driveSubsystem, 2, -0.25)
      );
