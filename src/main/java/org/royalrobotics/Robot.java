@@ -291,10 +291,10 @@ public class Robot extends TimedRobot {
     int dPadAngle = console.getDPadAngle();
     if (dPadAngle == 90){
       dPadPressed = true;
-      turret.rotateTurretRight(0.1);
+      turret.rotateTurretLeft(.1);
     } else if (dPadAngle == 270){
       dPadPressed = true;
-      turret.rotateTurretLeft(0.1);
+      turret.rotateTurretRight(.1);
     } else if (dPadPressed){
       dPadPressed = false;
       turret.setTurretStop();
