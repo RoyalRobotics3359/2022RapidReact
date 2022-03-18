@@ -11,6 +11,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.util.sendable.Sendable;
 //import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -58,6 +60,7 @@ import com.revrobotics.ColorSensorV3;
 //import java.beans.Encoder;
 
 import org.royalrobotics.commands.AimShooter;
+import org.royalrobotics.commands.DriveForwardThenShoot;
 //import org.royalrobotics.commands.BringShooterUpToSpeed;
 import org.royalrobotics.commands.ManualShoot;
 
@@ -91,6 +94,14 @@ public class Robot extends TimedRobot {
 
   private UsbCamera camera;
 
+  private Command driveForwardThenShoot;
+  private Command sCurve;
+  private Command autonomousCommand;
+
+  private SendableChooser<Command> chooser;
+
+  private boolean dPadPressed;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -123,7 +134,7 @@ public class Robot extends TimedRobot {
     // Setup a CvSource. This will send images back to the Dashboard
     CvSource outputStream = CameraServer.putVideo("Rectangle", 640, 480);
     // set FPS
-    camera.setFPS(24);
+    camera.setFPS(12);
 
     // //Color Sensor
     // Color detectedColor = m_colorSensor.getColor();
@@ -152,6 +163,19 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().setDefaultCommand(driveSubsystem, new JoystickDrive(console, driveSubsystem));
     //CommandScheduler.getInstance().setDefaultCommand(drive, new JoystickDrive(console, drive));
+  
+    driveForwardThenShoot = new DriveForwardThenShoot(shooter, hopper, turret, driveSubsystem, 3.0);
+    sCurve = RobotContainer.SCurveCommand(driveSubsystem);
+    
+  
+    chooser = new SendableChooser<>();
+
+    chooser.setDefaultOption("Back up, shoot, back up out of tarmac", driveForwardThenShoot);
+    chooser.addOption("S-Curve", sCurve);
+    chooser.addOption("Back Out Of Tarmack", new TimedDriveForward(driveSubsystem, 3, -0.2));
+    SmartDashboard.putData(chooser);
+
+    dPadPressed = false;
   }
 
   /** This function is run once each time the robot enters autonomous mode. */
@@ -160,12 +184,46 @@ public class Robot extends TimedRobot {
     m_timer.reset();
     m_timer.start();
     driveSubsystem.resetOdometry(new Pose2d());
-    //CommandScheduler.getInstance().schedule(new TimedDriveForward(driveSubsystem, 3, .3));
+    //CommandScheduler.getInstance().schedule(new TimedDriveForward(driveSubsystem, 2, -0.3));
 
-    //CommandScheduler.getInstance().schedule(RobotContainer.DriveStraightCommand(driveSubsystem, 2.0));
-    CommandScheduler.getInstance().schedule(RobotContainer.SCurveCommand(driveSubsystem));
+    //CommandScheduler.getInstance().schedule(RobotContainer.DriveStraightCommand(driveSubsystem, 1));
+    //CommandScheduler.getInstance().schedule(new DriveForwardThenShoot(shooter, hopper, turret, driveSubsystem, 3.0));
+    //CommandScheduler.getInstance().schedule(RobotContainer.SCurveCommand(driveSubsystem));
 
     //container.getAutonomousCommand().schedule();
+
+    //String autoList[] = {"Back Out Of Tarmack (3sec, -.2)", "S-Curve", "Shoot"};
+
+    //SmartDashboard.putStringArray("Auto List", autoList);
+
+    
+
+    // At the beginning of auto
+    // String autoName = SmartDashboard.getString("Auto Selector", "Drive Forwards"); // This would make "Drive Forwards the default auto
+    // switch(autoName) {
+    //   case "Back Out Of Tarmack (3sec, -.2)":
+    //     new TimedDriveForward(driveSubsystem, 2, -0.25).schedule();
+    //     break;
+    //   case "S-Curve":
+    //     sCurve.schedule();
+    //     break;
+    //   case "Shoot":
+    //     // auto he
+    //     break;
+    // }
+
+    autonomousCommand = getAutonomousCommand();
+
+    if (autonomousCommand != null){
+      autonomousCommand.schedule();
+    }
+
+    
+
+  }
+
+  public Command getAutonomousCommand() {
+    return chooser.getSelected();
   }
 
   /** This function is called periodically during autonomous. */
@@ -178,6 +236,9 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters teleoperated mode. */
   @Override
   public void teleopInit() {
+    if (autonomousCommand != null){
+      autonomousCommand.cancel();
+    }
   }
 
   /** This function is called periodically during teleoperated mode. */
@@ -193,7 +254,7 @@ public class Robot extends TimedRobot {
       if (!manualShootCommand.isRunning()) 
       {
         //System.out.println("running");(
-        CommandScheduler.getInstance().schedule(manualShootCommand);
+        manualShootCommand.schedule();
       }
     }
     else
@@ -207,10 +268,13 @@ public class Robot extends TimedRobot {
     // Used for automated Shooting
     if (manualShootCommand == null && console.getAutomatedTrigger() > 0.67){
         if (automatedShootCommand == null){
-          automatedShootCommand = new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, 3.0);
+          automatedShootCommand = new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, 3.0, true);
         } 
         if (!automatedShootCommand.isRunning()){
-          CommandScheduler.getInstance().schedule(automatedShootCommand);
+          automatedShootCommand.schedule();
+        }
+        if (automatedShootCommand.isFinished()) {
+          automatedShootCommand.cancel();
         }
     }
     else if (manualShootCommand == null && console.getAutomatedTrigger() <= 0.67){
@@ -221,13 +285,18 @@ public class Robot extends TimedRobot {
     }
     CommandScheduler.getInstance().run();
 
+    SmartDashboard.putNumber("Distance", turret.getDistanceFromTarget());
+
 
     int dPadAngle = console.getDPadAngle();
     if (dPadAngle == 90){
-      turret.rotateTurretRight();
+      dPadPressed = true;
+      turret.rotateTurretRight(0.1);
     } else if (dPadAngle == 270){
-      turret.rotateTurretLeft();
-    } else{
+      dPadPressed = true;
+      turret.rotateTurretLeft(0.1);
+    } else if (dPadPressed){
+      dPadPressed = false;
       turret.setTurretStop();
     }
     //SmartDashboard.putNumber("Distance From Target: ", turret.getDistanceFromTarget());

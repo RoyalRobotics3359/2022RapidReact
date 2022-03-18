@@ -16,6 +16,7 @@ public class AimShooter extends CommandBase {
 
   private Turret turret;
   private DriveSubsystem drive;
+  private boolean ready;
   //private OperatorConsole console;
   //private double moveTurret;
   
@@ -23,6 +24,7 @@ public class AimShooter extends CommandBase {
   public AimShooter(Turret turretSubsystem, DriveSubsystem driveSubsystem) {
     turret = turretSubsystem;
     drive = driveSubsystem;
+    ready = false;
     addRequirements(turret);
     if (!Constants.TURRET_EXISTS)
     {
@@ -40,26 +42,30 @@ public class AimShooter extends CommandBase {
   @Override
   public void execute() {
     if (Constants.TURRET_EXISTS) {
-      turret.aim();
+      if (turret.aim()){
+        System.out.println("Running aiming");
+        ready = true;
+      }
     } else {
       // TODO:  Turn the robot to face the target
       // Compute angle from Limelight to %power for drive
       // Set left & right power
       //drive.turnToAngle(angle);
 
-      //drive.aim(turret);
+      //turret.aim();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("AimShooter.end(" + interrupted + ")");
     turret.setTurretStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return ready;
   }
 }

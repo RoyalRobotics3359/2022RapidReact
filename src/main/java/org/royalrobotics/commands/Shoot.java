@@ -18,6 +18,8 @@ public class Shoot extends CommandBase {
   private Timer timer;
   private double delay;
 
+  private boolean isTimerRunning;
+
 
   public Shoot(Shooter shooterSubsystem, Hopper hopperSubsystem, double delay) {
     shooter = shooterSubsystem;
@@ -25,7 +27,7 @@ public class Shoot extends CommandBase {
     this.delay = delay;
     addRequirements(shooter, hopper);
     timer = new Timer();
-    timer.start();
+    isTimerRunning = false;
   }
 
   // Called when the command is initially scheduled.
@@ -37,9 +39,15 @@ public class Shoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.turnOnPichingMachine();
-    hopper.hopperUp();
-    hopper.hopperStopperRetract();
+    if (!isTimerRunning){
+      timer.start();
+      isTimerRunning = true;
+    }
+    if (!isFinished()){
+      shooter.turnOnPichingMachine();
+      hopper.hopperUp();
+      hopper.hopperStopperRetract();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -60,4 +68,12 @@ public class Shoot extends CommandBase {
     }
     return false;
   }
+  // @Override
+  // public boolean isFinished() {
+  //   System.out.println(timer.get());
+  //   if (timer.hasElapsed(3)){
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

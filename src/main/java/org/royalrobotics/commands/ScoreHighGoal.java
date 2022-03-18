@@ -27,17 +27,25 @@ public class ScoreHighGoal extends SequentialCommandGroup {
 
 
   /** Creates a new ScoreHighGoal. */
-  public ScoreHighGoal(Shooter shooterSubsystem, Hopper hopperSubsystem, Turret turretSubsystem, DriveSubsystem driveSubsystem, double delay) {
+  public ScoreHighGoal(Shooter shooterSubsystem, Hopper hopperSubsystem, Turret turretSubsystem, DriveSubsystem driveSubsystem, double delay, boolean aim) {
     shooter = shooterSubsystem;
     hopper = hopperSubsystem;
     turret = turretSubsystem;
     drive = driveSubsystem;
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
+    if (aim){
+      addCommands(
         new PrepareShooter(shooter, turret, drive), 
         new Shoot(shooter, hopper, delay)
     );
+    } else{
+      addCommands(
+        new BringShooterUpToSpeed(shooterSubsystem),
+        new Shoot(shooter, hopper, delay)
+    );
+    }
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    
     finished = false;
     running = false;
     System.out.println("scorehighgoal.scorehighgoal");
@@ -46,7 +54,9 @@ public class ScoreHighGoal extends SequentialCommandGroup {
   @Override
   public void execute() {
     running = true;
-    super.execute();
+    if (!isFinished()){
+      super.execute();
+    }
   }
 
   public void finish() {

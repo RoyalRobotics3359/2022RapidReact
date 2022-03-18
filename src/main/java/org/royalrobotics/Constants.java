@@ -41,7 +41,7 @@ public class Constants {
         driving(0.70),
         intakeIn(0.70),
         intakeOut(-0.70),
-        climber(0.50);      // FIXME: Set actual value
+        climber(0.80);      // FIXME: Set actual value
 
         public final double speed;
 

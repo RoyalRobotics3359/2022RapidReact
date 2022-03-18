@@ -4,26 +4,29 @@
 
 package org.royalrobotics.commands;
 
+import org.royalrobotics.RobotContainer;
 import org.royalrobotics.subsystems.DriveSubsystem;
 import org.royalrobotics.subsystems.Hopper;
 import org.royalrobotics.subsystems.Shooter;
 import org.royalrobotics.subsystems.Turret;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class PrepareShooter extends ParallelCommandGroup {
+public class DriveForwardThenShoot extends SequentialCommandGroup {
 
-  public PrepareShooter(Shooter shooterSubsystem, Turret turretSubsystem, DriveSubsystem driveSubsystem) {
-  
+  public DriveForwardThenShoot(Shooter shooter, Hopper hopper, Turret turret, DriveSubsystem driveSubsystem, double delay) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new BringShooterUpToSpeed(shooterSubsystem), 
-      new AimShooter(turretSubsystem, driveSubsystem)
-    );
+      //RobotContainer.DriveStraightCommand(driveSubsystem, 1),
+      new TimedDriveForward(driveSubsystem, 1, -0.25),
+      new ScoreHighGoal(shooter, hopper, turret, driveSubsystem, delay, false),
+      new TimedDriveForward(driveSubsystem, 2, -0.25)
+     );
+
   }
 }
