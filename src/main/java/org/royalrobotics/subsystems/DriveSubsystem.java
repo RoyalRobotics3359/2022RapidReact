@@ -51,12 +51,12 @@ public class DriveSubsystem extends SubsystemBase {
   private PIDController rightPIDController;
 
   //private static final double LEFT_KP = 3.5151;
-  private static final double LEFT_KP = 2.5;
+  private static final double LEFT_KP = 1.5;
   private static final double LEFT_KI = 0.0;
   private static final double LEFT_KD = 0.0;
 
   //private static final double RIGHT_KP = 3.5151;
-  private static final double RIGHT_KP = 2.5;
+  private static final double RIGHT_KP = 1.5;
   private static final double RIGHT_KI = 0.0;
   private static final double RIGHT_KD = 0.0;
 

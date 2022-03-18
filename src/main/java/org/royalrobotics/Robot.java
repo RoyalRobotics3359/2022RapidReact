@@ -145,9 +145,9 @@ public class Robot extends TimedRobot {
 
     // CLIMB
     console.getExtendClimberButton().whenPressed(new ExtendClimber(climber));
-    console.getRetractClimber().whenHeld(new RetractClimber(climber));
-
     console.getReverseClimbMotor().whenHeld(new ReverseClimber(climber));
+
+    console.getRetractClimber().whenHeld(new RetractClimber(climber));
     
     // INTAKE / HOPPER
     console.getIntakeInButton().whenHeld(new IntakeIn(intake, hopper));
@@ -172,7 +172,7 @@ public class Robot extends TimedRobot {
 
     chooser.setDefaultOption("Back up, shoot, back up out of tarmac", driveForwardThenShoot);
     chooser.addOption("S-Curve", sCurve);
-    chooser.addOption("Back Out Of Tarmack", new TimedDriveForward(driveSubsystem, 3, -0.2));
+    chooser.addOption("Back Out Of Tarmack (3sec, -.2)", new TimedDriveForward(driveSubsystem, 3, -0.2));
     SmartDashboard.putData(chooser);
 
     dPadPressed = false;
